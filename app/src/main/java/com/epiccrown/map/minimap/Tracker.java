@@ -121,4 +121,10 @@ public class Tracker extends Service {
             }
         }
     }
+
+    @Override
+    public void onDestroy() {
+        Preferences.setServiceStarted(getApplicationContext(),false);
+        Toast.makeText(getApplicationContext(),"Service destroyed",Toast.LENGTH_SHORT).show();
+    }
 }

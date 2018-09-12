@@ -43,7 +43,7 @@ public class Home extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getActivity().setTitle(getResources().getString(R.string.app_name));
     }
 
     @Nullable
@@ -56,6 +56,7 @@ public class Home extends Fragment{
         setUpService();
         //setFakeUsers(10);
         //setAdapter();
+
         return v;
     }
 

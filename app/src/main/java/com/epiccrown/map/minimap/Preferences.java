@@ -9,13 +9,13 @@ public class Preferences {
     private final static String LOG_CHECK = "lgurs";
     private final static String USERNAME_REQUEST = "usernamereq";
     private final static String FAMILY_KEY = "family_key";
+    private final static String ALWAYS_TRACKED = "tracktion";
 
-
-    public static boolean getServiceStart(Context context) {
+    public static boolean getServiceStarted(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(ServiceStarted, false);
     }
-    public static void setServiceStart(Context context, boolean started) {
+    public static void setServiceStarted(Context context, boolean started) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(ServiceStarted, started)
@@ -67,6 +67,18 @@ public class Preferences {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putString(FAMILY_KEY, family)
+                .apply();
+    }
+
+    public static boolean isAlwaysTracked(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(ALWAYS_TRACKED,true);
+    }
+
+    public static void setAlwaysTrackedEnabled(Context context, boolean enabled){
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(ALWAYS_TRACKED, enabled)
                 .apply();
     }
 }
