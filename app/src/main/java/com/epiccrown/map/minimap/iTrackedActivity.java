@@ -50,6 +50,7 @@ public class iTrackedActivity extends AppCompatActivity
         showPrimaryFragment(home);
     }
 
+
     private void setUpDefaultMethods(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,7 +66,12 @@ public class iTrackedActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                hideKeyboard();
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 

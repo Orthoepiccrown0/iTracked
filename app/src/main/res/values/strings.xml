@@ -29,5 +29,13 @@
     <string name="user_info_box_time">m ago</string>
 
     <string name="profile_new_username_hint">Username</string>
+    <string name="profile_new_username_hint_user_exist">Username is not available</string>
+    <string name="profile_new_username_hint_user_available">Username is available</string>
     <string name="profile_startup_text">Always tracked</string>
+    <string name="profile_details">
+        iTracked uses your GPS location and send it across the Internet
+        to give access to your friend or family to find you at any time!
+        You can forbid access to your location due to your privacy but
+        some functionality will not work
+    </string>
 </resources>

@@ -23,6 +23,7 @@ public class RESTfulHelper {
     private static final String REGISTER_PATH = "registration/";
     private static final String LOGIN_PATH = "login/";
     private static final String DOWNLOAD_PATH = "search/";
+    private static final String CHANGE_USERNAME_PATH = "change_username/";
 
     private Uri ENDPOINT;
 
@@ -49,6 +50,36 @@ public class RESTfulHelper {
                     .build();
         }
 
+        try {
+            return getUrlString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            try {
+                Thread.sleep(1000*60*10);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    public String changeUsername(String newusername, Context context, boolean isToChange){
+        if(!isToChange)
+            ENDPOINT = Uri.parse(FIRTS_PART_URL + CHANGE_USERNAME_PATH)
+                    .buildUpon()
+                    .appendQueryParameter("username", Preferences.getUsername(context))
+                    .appendQueryParameter("idcode", Preferences.getIDcode(context))
+                    .appendQueryParameter("new_username", newusername)
+                    .build();
+        else
+            ENDPOINT = Uri.parse(FIRTS_PART_URL + CHANGE_USERNAME_PATH)
+                    .buildUpon()
+                    .appendQueryParameter("username", Preferences.getUsername(context))
+                    .appendQueryParameter("idcode", Preferences.getIDcode(context))
+                    .appendQueryParameter("new_username", newusername)
+                    .appendQueryParameter("change","true")
+                    .build();
         try {
             return getUrlString();
         } catch (IOException e) {

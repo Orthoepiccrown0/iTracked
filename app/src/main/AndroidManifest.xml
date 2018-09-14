@@ -54,7 +54,8 @@
         <activity
             android:name=".iTrackedActivity"
             android:label="@string/title_activity_i_tracked"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
