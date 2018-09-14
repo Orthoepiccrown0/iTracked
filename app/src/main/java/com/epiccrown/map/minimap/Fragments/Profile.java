@@ -1,6 +1,5 @@
 package com.epiccrown.map.minimap.Fragments;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -96,7 +95,7 @@ public class Profile extends Fragment {
             }
         });
 
-        textLayout = v.findViewById(R.id.profile_username_layout);
+        textLayout = v.findViewById(R.id.family_text_layout);
         return v;
     }
 

@@ -38,4 +38,10 @@
         You can forbid access to your location due to your privacy but
         some functionality will not work
     </string>
+
+    <string name="family_hint">Family</string>
+    <string name="family_members_count">Members: </string>
+    <string name="family_details">Feature called "family" is  used to identify more people
+        at the same time and connect all your friends/family in one group to simplify the search.
+    </string>
 </resources>

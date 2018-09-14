@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.epiccrown.map.minimap.Fragments.Family;
 import com.epiccrown.map.minimap.Fragments.Home;
 import com.epiccrown.map.minimap.Fragments.Profile;
 import com.epiccrown.map.minimap.account.LoginActivity;
@@ -128,7 +129,10 @@ public class iTrackedActivity extends AppCompatActivity
             showPrimaryFragment(profile);
             hideKeyboard();
         } else if (id == R.id.menu_family) {
-
+            if(family == null)
+                family = new Family();
+            showPrimaryFragment(family);
+            hideKeyboard();
         } else if (id == R.id.menu_logout) {
             deleteUser();
         } else if (id == R.id.menu_home) {
