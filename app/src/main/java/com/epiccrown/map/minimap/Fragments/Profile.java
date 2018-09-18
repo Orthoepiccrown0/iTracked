@@ -20,6 +20,7 @@ import android.widget.Switch;
 import com.epiccrown.map.minimap.Preferences;
 import com.epiccrown.map.minimap.R;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
+import com.epiccrown.map.minimap.helpers.ServicesManager;
 
 public class Profile extends Fragment {
     FloatingActionButton save_btn;
@@ -45,8 +46,16 @@ public class Profile extends Fragment {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tracking_changed)
-                    Preferences.setAlwaysTrackedEnabled(getContext(),always_tracked_switch.isChecked());
+                if(tracking_changed) {
+                    Preferences.setAlwaysTrackedEnabled(getContext(), always_tracked_switch.isChecked());
+                    ServicesManager manager = new ServicesManager(getActivity());
+                    if(!always_tracked_switch.isChecked())
+                        if(manager.isTrackingOn())
+                            manager.disableTracking();
+                    else
+                        if(!manager.isTrackingOn())
+                            manager.startTracking();
+                }
                 if(username_available){
                     save_cliccked = true;
                     new UsernameChanger().execute();

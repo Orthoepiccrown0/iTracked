@@ -1,16 +1,23 @@
 package com.epiccrown.map.minimap;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.transition.Transition;
+import android.transition.TransitionValues;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,11 +31,13 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.epiccrown.map.minimap.Fragments.Family;
 import com.epiccrown.map.minimap.Fragments.Home;
 import com.epiccrown.map.minimap.Fragments.Profile;
 import com.epiccrown.map.minimap.account.LoginActivity;
+import com.epiccrown.map.minimap.helpers.ServicesManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,23 +45,34 @@ import java.util.List;
 public class iTrackedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
     private TextView username_label;
     private Fragment home;
     private Fragment profile;
     private Fragment family;
+    DrawerLayout drawer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         isLogged();
         setContentView(R.layout.activity_i_tracked);
-        Tracker.mainact = this;
         setUpDefaultMethods();
         home = new Home();
         showPrimaryFragment(home);
+        startTracking();
     }
 
+    private void startTracking() {
+        if (Preferences.isAlwaysTracked(this)) {
+            ServicesManager manager = new ServicesManager(this);
+            if (!manager.isTrackingOn())
+                manager.startTracking();
+            else
+                Toast.makeText(this, "The iTracked service is still on", Toast.LENGTH_LONG).show();
+        }
+    }
 
-    private void setUpDefaultMethods(){
+    private void setUpDefaultMethods() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,9 +85,10 @@ public class iTrackedActivity extends AppCompatActivity
 //            }
 //        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 hideKeyboard();
@@ -124,12 +145,12 @@ public class iTrackedActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.menu_username) {
-            if(profile == null)
+            if (profile == null)
                 profile = new Profile();
             showPrimaryFragment(profile);
             hideKeyboard();
         } else if (id == R.id.menu_family) {
-            if(family == null)
+            if (family == null)
                 family = new Family();
             showPrimaryFragment(family);
             hideKeyboard();
@@ -142,49 +163,50 @@ public class iTrackedActivity extends AppCompatActivity
         return true;
     }
 
-    private void hideKeyboard(){
+    private void hideKeyboard() {
         try {
             View view = this.getCurrentFocus();
             if (view != null) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void showPrimaryFragment(Fragment fragment){
+    private void showPrimaryFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
+        closeDrawer();
         fm.beginTransaction()
-                .replace(R.id.main_holder,fragment)
+                .replace(R.id.main_holder, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .disallowAddToBackStack()
                 .commit();
     }
 
-    private void closeDrawer(){
+    private void closeDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    private void deleteUser(){
-        Preferences.setLogged(this,false);
-        Preferences.setUsername(this,null);
-        Preferences.setIDcode(this,null);
+    private void deleteUser() {
+        Preferences.setLogged(this, false);
+        Preferences.setUsername(this, null);
+        Preferences.setIDcode(this, null);
 
-        Intent intent = new Intent(this,LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
     private void isLogged() {
-        if(!Preferences.isLogged(this)){
+        if (!Preferences.isLogged(this)) {
             Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
     }
-
 
 
 }

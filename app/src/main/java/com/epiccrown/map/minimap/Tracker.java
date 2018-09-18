@@ -20,27 +20,21 @@ import com.epiccrown.map.minimap.helpers.RESTfulHelper;
 public class Tracker extends Service {
     private IBinder binder = new TrackerBinder();
     private Location lastlocation = null;
-    private double distanceInMeters = 0;
-    public static iTrackedActivity mainact;
-
+    LocationManager manager;
     @Override
     public void onCreate() {
-        LocationListener listener = new LocationListener() {
+        //Preferences.setServiceStarted(getApplicationContext(),true);
+        final LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if (lastlocation == null) {
+                float acc = location.getAccuracy();
+
+//                if(location.getAccuracy()<100) {
                     lastlocation = location;
                     new Sender().execute();
-                } else {
-                    distanceInMeters += location.distanceTo(lastlocation);
-                    if (distanceInMeters > 5) {
-                        lastlocation = location;
-                        new Sender().execute();
-                    }
-                    distanceInMeters = 0;
-                }
-
-
+                    manager.removeUpdates(this);
+                    Toast.makeText(getApplicationContext(),"I AM UPDATING TRACKER",Toast.LENGTH_LONG).show();
+//                }
             }
 
             @Override
@@ -58,7 +52,7 @@ public class Tracker extends Service {
 
             }
         };
-        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 
         if (manager != null) {
@@ -73,6 +67,7 @@ public class Tracker extends Service {
                 return;
             }
             manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, listener);
+
 
         }
 
@@ -125,6 +120,5 @@ public class Tracker extends Service {
     @Override
     public void onDestroy() {
         Preferences.setServiceStarted(getApplicationContext(),false);
-        Toast.makeText(getApplicationContext(),"Service destroyed",Toast.LENGTH_SHORT).show();
     }
 }

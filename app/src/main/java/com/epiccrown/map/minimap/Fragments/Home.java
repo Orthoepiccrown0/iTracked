@@ -1,5 +1,6 @@
 package com.epiccrown.map.minimap.Fragments;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -46,6 +47,8 @@ public class Home extends Fragment{
         getActivity().setTitle(getResources().getString(R.string.app_name));
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class Home extends Fragment{
         mRecycler = v.findViewById(R.id.users_list_recycler);
         searchView = v.findViewById(R.id.simpleSearchView);
         setUpSearch();
-        setUpService();
+        //setUpService();
         //setFakeUsers(10);
         //setAdapter();
 
@@ -155,12 +158,12 @@ public class Home extends Fragment{
             }
 
             void bindItem(final UserInfo user) {
-                String minutes = UsefulStaticMethods.getDiffTime(Long.parseLong(user.getLastupdate()));
+                String date = UsefulStaticMethods.getDate(Long.parseLong(user.getLastupdate()),"dd/MM/yyyy HH:mm");
 
                 username.setText(user.getUsername());
                 lat.setText("Latitude: "+user.getLatitude());
                 longt.setText("Longitude: "+user.getLongitude());
-                last_update.setText(minutes+getResources().getString(R.string.user_info_box_time));
+                last_update.setText(date);
 
                 card.setOnClickListener(new View.OnClickListener() {
                     @Override
