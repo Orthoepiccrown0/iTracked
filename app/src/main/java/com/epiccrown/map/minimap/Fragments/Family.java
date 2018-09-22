@@ -77,7 +77,7 @@ public class Family extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 
-                if(s.toString().trim().length()>3){
+                if(s.toString().trim().length()>1){
                     newFamily = s.toString().trim();
                     save_btn.show();
                     save_cliccked=false;
@@ -86,6 +86,8 @@ public class Family extends Fragment {
                 if(s.toString().trim().equals(Preferences.getFamily(getActivity())))
                     save_btn.hide();
 
+                if(s.toString().trim().length()==0)
+                    save_btn.hide();
             }
 
             @Override

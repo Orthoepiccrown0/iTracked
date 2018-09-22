@@ -108,11 +108,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... voids) {
+            progressDialog.show();
             return new RESTfulHelper().sendUser(Username,Password,idcode,getApplicationContext());
         }
 
         @Override
         protected void onPostExecute(String s) {
+            progressDialog.dismiss();
             if(s.trim().equals("User exist")){
                 error_message.setVisibility(View.VISIBLE);
                 error_message.setText(getResources().getText(R.string.register_error_user_exist));

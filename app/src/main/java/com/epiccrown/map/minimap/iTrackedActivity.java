@@ -1,24 +1,11 @@
 package com.epiccrown.map.minimap;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
-import android.transition.Transition;
-import android.transition.TransitionValues;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,19 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.epiccrown.map.minimap.Fragments.Family;
 import com.epiccrown.map.minimap.Fragments.Home;
 import com.epiccrown.map.minimap.Fragments.Profile;
 import com.epiccrown.map.minimap.account.LoginActivity;
-import com.epiccrown.map.minimap.helpers.ServicesManager;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.epiccrown.map.minimap.ServiceStuff.ServicesManager;
 
 public class iTrackedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,6 +33,9 @@ public class iTrackedActivity extends AppCompatActivity
     private Fragment profile;
     private Fragment family;
     DrawerLayout drawer;
+
+    private Fragment fragmentToSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,13 +48,8 @@ public class iTrackedActivity extends AppCompatActivity
     }
 
     private void startTracking() {
-        if (Preferences.isAlwaysTracked(this)) {
-            ServicesManager manager = new ServicesManager(this);
-            if (!manager.isTrackingOn())
-                manager.startTracking();
-            else
-                Toast.makeText(this, "The iTracked service is still on", Toast.LENGTH_LONG).show();
-        }
+        ServicesManager manager = new ServicesManager(this);
+        manager.startTracking();
     }
 
     private void setUpDefaultMethods() {
@@ -85,7 +65,6 @@ public class iTrackedActivity extends AppCompatActivity
 //            }
 //        });
 
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -93,6 +72,14 @@ public class iTrackedActivity extends AppCompatActivity
             public void onDrawerOpened(View drawerView) {
                 hideKeyboard();
             }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                if(fragmentToSet!=null)
+                showPrimaryFragment(fragmentToSet);
+            }
+
+
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -138,7 +125,7 @@ public class iTrackedActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -147,17 +134,20 @@ public class iTrackedActivity extends AppCompatActivity
         if (id == R.id.menu_username) {
             if (profile == null)
                 profile = new Profile();
-            showPrimaryFragment(profile);
+            //showPrimaryFragment(profile);
+            fragmentToSet = profile;
             hideKeyboard();
         } else if (id == R.id.menu_family) {
             if (family == null)
                 family = new Family();
-            showPrimaryFragment(family);
+            //showPrimaryFragment(family);
+            fragmentToSet = family;
             hideKeyboard();
         } else if (id == R.id.menu_logout) {
             deleteUser();
         } else if (id == R.id.menu_home) {
-            showPrimaryFragment(home);
+            //showPrimaryFragment(home);
+            fragmentToSet = home;
         }
         closeDrawer();
         return true;
@@ -177,17 +167,17 @@ public class iTrackedActivity extends AppCompatActivity
 
     private void showPrimaryFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
-        closeDrawer();
         fm.beginTransaction()
                 .replace(R.id.main_holder, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .disallowAddToBackStack()
                 .commit();
+        fragmentToSet = null;
     }
 
     private void closeDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawers();
     }
 
     private void deleteUser() {

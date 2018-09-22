@@ -1,6 +1,5 @@
 package com.epiccrown.map.minimap.Fragments;
 
-import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,12 +13,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.epiccrown.map.minimap.MapsActivity;
 import com.epiccrown.map.minimap.R;
-import com.epiccrown.map.minimap.Tracker;
+import com.epiccrown.map.minimap.ServiceStuff.Tracker;
 import com.epiccrown.map.minimap.UserInfo;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
 import com.epiccrown.map.minimap.helpers.UsefulStaticMethods;
@@ -37,7 +37,7 @@ public class Home extends Fragment{
     private UserInfoAdapter mAdapter;
     private RecyclerView mRecycler;
     private SearchView searchView;
-
+    private ProgressBar progressBar;
     private List<UserInfo> users = new ArrayList<>();
     private String usersQuery = "";
 
@@ -55,10 +55,8 @@ public class Home extends Fragment{
         View v = inflater.inflate(R.layout.home_layout,container,false);
         mRecycler = v.findViewById(R.id.users_list_recycler);
         searchView = v.findViewById(R.id.simpleSearchView);
+        progressBar = v.findViewById(R.id.home_progressbar);
         setUpSearch();
-        //setUpService();
-        //setFakeUsers(10);
-        //setAdapter();
 
         return v;
     }
@@ -100,11 +98,6 @@ public class Home extends Fragment{
 
             users.add(userInfo);
         }
-    }
-
-    private void setUpService() {
-        Intent intent = new Intent(getActivity(),Tracker.class);
-        getActivity().startService(intent);
     }
 
     //Adapter for user info
@@ -186,6 +179,11 @@ public class Home extends Fragment{
     class SearchTrackers extends AsyncTask<Void,Void,String>{
 
         @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected String doInBackground(Void... voids) {
             RESTfulHelper helper = new RESTfulHelper();
             return helper.search(usersQuery,usersQuery);
@@ -209,6 +207,7 @@ public class Home extends Fragment{
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            progressBar.setVisibility(View.GONE);
             setAdapter();
 
         }

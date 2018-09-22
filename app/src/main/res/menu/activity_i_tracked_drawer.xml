@@ -17,7 +17,7 @@
     <item
         android:id="@+id/menu_family"
         android:title="Family"
-        android:icon="@drawable/family"/>
+        android:icon="@drawable/family_icon"/>
 
     </group>
 

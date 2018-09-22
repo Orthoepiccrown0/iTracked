@@ -112,12 +112,14 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... voids) {
+            progressDialog.show();
             RESTfulHelper helper = new RESTfulHelper();
             return helper.getUser(Username,Password);
         }
 
         @Override
         protected void onPostExecute(String s) {
+            progressDialog.dismiss();
             if(s.equals("Nope")){
                 error_message.setVisibility(View.VISIBLE);
                 error_message.setText(getResources().getText(R.string.login_error_nope));

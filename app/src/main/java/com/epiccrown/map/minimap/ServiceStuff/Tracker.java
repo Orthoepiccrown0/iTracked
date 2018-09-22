@@ -1,7 +1,7 @@
-package com.epiccrown.map.minimap;
+package com.epiccrown.map.minimap.ServiceStuff;
 
 import android.Manifest;
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,30 +11,33 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.epiccrown.map.minimap.Preferences;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
 
-public class Tracker extends Service {
-    private IBinder binder = new TrackerBinder();
+public class Tracker extends IntentService {
     private Location lastlocation = null;
     LocationManager manager;
+
+    public Tracker() {
+        super("iTracker service");
+    }
+
     @Override
-    public void onCreate() {
-        //Preferences.setServiceStarted(getApplicationContext(),true);
+    protected void onHandleIntent(@Nullable Intent intent) {
+        //Toast.makeText(getApplicationContext(),"Service Started",Toast.LENGTH_SHORT).show();
+        Log.i("SERVICE iTracked","SERVICE STARTED");
         final LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                float acc = location.getAccuracy();
-
-//                if(location.getAccuracy()<100) {
-                    lastlocation = location;
-                    new Sender().execute();
-                    manager.removeUpdates(this);
-                    Toast.makeText(getApplicationContext(),"I AM UPDATING TRACKER",Toast.LENGTH_LONG).show();
-//                }
+                lastlocation = location;
+                new Sender().execute();
+                manager.removeUpdates(this);
+                //stopSelf();
             }
 
             @Override
@@ -57,40 +60,15 @@ public class Tracker extends Service {
 
         if (manager != null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, listener);
-
-
         }
-
-
-    }
-
-
-    public Tracker() {
-    }
-
-    public Location getLastlocation() {
-        return lastlocation;
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
-    }
-
-    public class TrackerBinder extends Binder {
-        Tracker getTracker(){
-            return Tracker.this;
-        }
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        return START_NOT_STICKY;
     }
 
     //Sender
@@ -98,7 +76,7 @@ public class Tracker extends Service {
 
         @Override
         protected String doInBackground(Void... voids) {
-            if(lastlocation!=null&&Preferences.isLogged(getApplicationContext())) {
+            if(lastlocation!=null&& Preferences.isLogged(getApplicationContext())) {
                 RESTfulHelper helper = new RESTfulHelper();
                 return helper.sendInfo(lastlocation, getApplication());
             }
@@ -108,17 +86,18 @@ public class Tracker extends Service {
         @Override
         protected void onPostExecute(String s) {
             if(s.equals("New record created successfully")){
-                Toast.makeText(getApplicationContext(),"New record created successfully",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"New record created successfully",Toast.LENGTH_SHORT).show();
             }else if(s.equals("Record updated successfully")){
-                Toast.makeText(getApplicationContext(),"Record updated successfully",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Record updated successfully",Toast.LENGTH_SHORT).show();
             }else{
-                Toast.makeText(getApplicationContext(),"Something has gone wrong",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Something has gone wrong",Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
     public void onDestroy() {
-        Preferences.setServiceStarted(getApplicationContext(),false);
+        //Toast.makeText(getApplicationContext(),"Service Destroyed",Toast.LENGTH_LONG).show();
+        Log.i("SERVICE iTracked","SERVICE DESTROYED");
     }
 }

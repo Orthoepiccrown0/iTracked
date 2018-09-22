@@ -1,4 +1,4 @@
-package com.epiccrown.map.minimap.helpers;
+package com.epiccrown.map.minimap.ServiceStuff;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,15 +7,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.SystemClock;
 
-import com.epiccrown.map.minimap.Preferences;
-import com.epiccrown.map.minimap.Tracker;
-
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class ServicesManager {
     private Context mContext;
-    private static final long SEND_INTERVAL = 1000*60*10;
+    private static final long SEND_INTERVAL = 1000*60;
 
     public ServicesManager(Context mContext) {
         this.mContext = mContext;
@@ -23,11 +20,14 @@ public class ServicesManager {
 
     public void startTracking() {
         if(isNetworkAvailableAndConnected()) {
+            if(isTrackingOn())
+                disableTracking();
             AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
             Intent intent = new Intent(mContext, Tracker.class);
             PendingIntent pendingIntent = PendingIntent.getService(mContext,0,intent,0);
             alarmManager.
-                    setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),SEND_INTERVAL,pendingIntent);
+                    setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                            SystemClock.elapsedRealtime(),SEND_INTERVAL,pendingIntent);
         }
     }
 
@@ -52,7 +52,7 @@ public class ServicesManager {
         if (isTrackingOn()) {
             AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
             Intent intent = new Intent(mContext, Tracker.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,0,intent,0);
+            PendingIntent pendingIntent = PendingIntent.getService(mContext, 0,intent,0);
             alarmManager.cancel(pendingIntent);
             pendingIntent.cancel();
         }
