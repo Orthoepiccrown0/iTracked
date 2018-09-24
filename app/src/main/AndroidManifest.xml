@@ -38,12 +38,16 @@
 
         <service
             android:name=".ServiceStuff.Tracker"
-            android:enabled="true"
+            android:enabled="false"
             android:exported="false" />
+
+        <service android:name=".ServiceStuff.TrackerJob"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <receiver
             android:name=".ServiceStuff.StartBackgroundService"
-            android:enabled="true"
+            android:enabled="false"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

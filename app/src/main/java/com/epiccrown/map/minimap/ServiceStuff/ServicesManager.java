@@ -12,27 +12,27 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class ServicesManager {
     private Context mContext;
-    private static final long SEND_INTERVAL = 1000*60;
+    private static final long SEND_INTERVAL = 1000 * 60;
 
     public ServicesManager(Context mContext) {
         this.mContext = mContext;
     }
 
     public void startTracking() {
-        if(isNetworkAvailableAndConnected()) {
-            if(isTrackingOn())
+        if (isNetworkAvailableAndConnected()) {
+            if (isTrackingOn())
                 disableTracking();
             AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
             Intent intent = new Intent(mContext, Tracker.class);
-            PendingIntent pendingIntent = PendingIntent.getService(mContext,0,intent,0);
+            PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, intent, 0);
             alarmManager.
                     setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                            SystemClock.elapsedRealtime(),SEND_INTERVAL,pendingIntent);
+                            SystemClock.elapsedRealtime(), SEND_INTERVAL, pendingIntent);
         }
     }
 
     public boolean isTrackingOn() {
-        Intent i = new Intent(mContext,Tracker.class);
+        Intent i = new Intent(mContext, Tracker.class);
         PendingIntent pi = PendingIntent
                 .getService(mContext, 0, i, PendingIntent.FLAG_NO_CREATE);
         return pi != null;
@@ -48,11 +48,11 @@ public class ServicesManager {
         return isNetworkConnected;
     }
 
-    public void disableTracking(){
+    public void disableTracking() {
         if (isTrackingOn()) {
             AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
             Intent intent = new Intent(mContext, Tracker.class);
-            PendingIntent pendingIntent = PendingIntent.getService(mContext, 0,intent,0);
+            PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, intent, 0);
             alarmManager.cancel(pendingIntent);
             pendingIntent.cancel();
         }

@@ -56,7 +56,7 @@ public class Profile extends Fragment {
                         if (manager.isTrackingOn()) {
                             manager.disableTracking();
                         }
-                    }else {
+                    } else {
                         manager.startTracking();
                     }
                 }

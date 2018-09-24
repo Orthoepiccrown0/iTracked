@@ -14,6 +14,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private UserInfo info;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
 
     }
@@ -45,12 +45,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if(info!=null){
-            LatLng target = new LatLng(Double.parseDouble(info.getLatitude()),Double.parseDouble(info.getLongitude()));
+        if (info != null) {
+            LatLng target = new LatLng(Double.parseDouble(info.getLatitude()), Double.parseDouble(info.getLongitude()));
             mMap.addMarker(new MarkerOptions().position(target).title(info.getUsername()));
             //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(target,200));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(target, 200));
         }
 
 

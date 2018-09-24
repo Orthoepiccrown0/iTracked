@@ -11,8 +11,8 @@ import com.epiccrown.map.minimap.ServiceStuff.ServicesManager;
 public class StartBackgroundService extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        ServicesManager manager = new ServicesManager(context);
-        manager.startTracking();
+//        ServicesManager manager = new ServicesManager(context);
+//        manager.startTracking();
     }
 
 }

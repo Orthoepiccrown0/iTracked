@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private String Username;
     private String Password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +45,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this ,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
         }
     }
@@ -57,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                 String tmp_username = input_email.getText().toString().trim();
                 String clear_password = input_password.getText().toString().trim();
 
-                if(checkUsername(tmp_username)&&checkPassword(clear_password)){
+                if (checkUsername(tmp_username) && checkPassword(clear_password)) {
                     Username = tmp_username;
                     Password = UsefulStaticMethods.getMD5string(clear_password);
                     new GetUser().execute();
@@ -75,18 +76,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean checkPassword(String clear_password) {
-        return(clear_password.length()>4);
+        return (clear_password.length() > 4);
     }
 
     private boolean checkUsername(String tmp_username) {
-        return (tmp_username.length()>3);
+        return (tmp_username.length() > 3);
     }
 
     private void registerLink() {
         link_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -103,39 +104,39 @@ public class LoginActivity extends AppCompatActivity {
     private void hideActionBar() {
         try {
             getSupportActionBar().hide();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    class GetUser extends AsyncTask<Void, Void, String>{
+    class GetUser extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
             progressDialog.show();
             RESTfulHelper helper = new RESTfulHelper();
-            return helper.getUser(Username,Password);
+            return helper.getUser(Username, Password);
         }
 
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
-            if(s.equals("Nope")){
+            if (s.equals("Nope")) {
                 error_message.setVisibility(View.VISIBLE);
                 error_message.setText(getResources().getText(R.string.login_error_nope));
-            }else{
-                try{
+            } else {
+                try {
                     JSONObject jsonObject = new JSONObject(s);
                     String username = jsonObject.getString("username");
                     String idcode = jsonObject.getString("idcode");
-                    Preferences.setIDcode(LoginActivity.this,idcode);
-                    Preferences.setUsername(LoginActivity.this,username);
-                    Preferences.setLogged(LoginActivity.this,true);
+                    Preferences.setIDcode(LoginActivity.this, idcode);
+                    Preferences.setUsername(LoginActivity.this, username);
+                    Preferences.setLogged(LoginActivity.this, true);
 
                     Intent intent = new Intent(LoginActivity.this, iTrackedActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -143,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled(String s) {
-            Toast.makeText(LoginActivity.this,"An error occurred",Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
         }
     }
 

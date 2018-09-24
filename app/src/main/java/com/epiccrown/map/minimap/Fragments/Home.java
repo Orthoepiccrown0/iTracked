@@ -31,7 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends Fragment{
+public class Home extends Fragment {
 
     private boolean started = false;
     private UserInfoAdapter mAdapter;
@@ -48,11 +48,10 @@ public class Home extends Fragment{
     }
 
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.home_layout,container,false);
+        View v = inflater.inflate(R.layout.home_layout, container, false);
         mRecycler = v.findViewById(R.id.users_list_recycler);
         searchView = v.findViewById(R.id.simpleSearchView);
         progressBar = v.findViewById(R.id.home_progressbar);
@@ -70,7 +69,7 @@ public class Home extends Fragment{
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.trim().length()>0) {
+                if (newText.trim().length() > 0) {
                     usersQuery = newText;
                     new SearchTrackers().execute();
                 }
@@ -88,7 +87,7 @@ public class Home extends Fragment{
     }
 
     private void setFakeUsers(int fakeUsers) {
-        for(int i = 0; i<fakeUsers;i++) {
+        for (int i = 0; i < fakeUsers; i++) {
             UserInfo userInfo = new UserInfo();
             userInfo.setFamily("None");
             userInfo.setLastupdate("12:00");
@@ -102,7 +101,7 @@ public class Home extends Fragment{
 
     //Adapter for user info
 
-    class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ItemHolder>{
+    class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ItemHolder> {
         private List<UserInfo> items;
         private Context mContext;
 
@@ -118,7 +117,7 @@ public class Home extends Fragment{
         @Override
         public UserInfoAdapter.ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            View v = inflater.inflate(R.layout.user_info_item, parent,false);
+            View v = inflater.inflate(R.layout.user_info_item, parent, false);
 
             return new UserInfoAdapter.ItemHolder(v);
         }
@@ -141,6 +140,7 @@ public class Home extends Fragment{
             TextView longt;
             TextView last_update;
             CardView card;
+
             ItemHolder(View itemView) {
                 super(itemView);
                 username = itemView.findViewById(R.id.user_username);
@@ -151,11 +151,11 @@ public class Home extends Fragment{
             }
 
             void bindItem(final UserInfo user) {
-                String date = UsefulStaticMethods.getDate(Long.parseLong(user.getLastupdate()),"dd/MM/yyyy HH:mm");
+                String date = UsefulStaticMethods.getDate(Long.parseLong(user.getLastupdate()), "dd/MM/yyyy HH:mm");
 
                 username.setText(user.getUsername());
-                lat.setText("Latitude: "+user.getLatitude());
-                longt.setText("Longitude: "+user.getLongitude());
+                lat.setText("Latitude: " + user.getLatitude());
+                longt.setText("Longitude: " + user.getLongitude());
                 last_update.setText(date);
 
                 card.setOnClickListener(new View.OnClickListener() {
@@ -163,11 +163,11 @@ public class Home extends Fragment{
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), MapsActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("target",user);
-                        intent.putExtra("target_bundle",bundle);
-                        try{
+                        bundle.putSerializable("target", user);
+                        intent.putExtra("target_bundle", bundle);
+                        try {
                             getActivity().startActivity(intent);
-                        }catch (Exception ex){
+                        } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     }
@@ -176,7 +176,7 @@ public class Home extends Fragment{
         }
     }
 
-    class SearchTrackers extends AsyncTask<Void,Void,String>{
+    class SearchTrackers extends AsyncTask<Void, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -186,7 +186,7 @@ public class Home extends Fragment{
         @Override
         protected String doInBackground(Void... voids) {
             RESTfulHelper helper = new RESTfulHelper();
-            return helper.search(usersQuery,usersQuery);
+            return helper.search(usersQuery, usersQuery);
         }
 
         @Override

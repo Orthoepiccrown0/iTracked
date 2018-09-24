@@ -28,26 +28,26 @@ public class RESTfulHelper {
 
     private Uri ENDPOINT;
 
-    public String sendInfo(Location location, Context context){
+    public String sendInfo(Location location, Context context) {
 
-        if(Preferences.getFamily(context)==null){
-            ENDPOINT = Uri.parse(FIRTS_PART_URL+SEND_PATH)
+        if (Preferences.getFamily(context) == null) {
+            ENDPOINT = Uri.parse(FIRTS_PART_URL + SEND_PATH)
                     .buildUpon()
                     .appendQueryParameter("idcode", Preferences.getIDcode(context))
-                    .appendQueryParameter("username",Preferences.getUsername(context))
-                    .appendQueryParameter("latitude", location.getLatitude()+"")
-                    .appendQueryParameter("longitude",location.getLongitude()+"")
-                    .appendQueryParameter("lastupdate",getUnixTime()+"")
+                    .appendQueryParameter("username", Preferences.getUsername(context))
+                    .appendQueryParameter("latitude", location.getLatitude() + "")
+                    .appendQueryParameter("longitude", location.getLongitude() + "")
+                    .appendQueryParameter("lastupdate", getUnixTime() + "")
                     .build();
-        }else{
-            ENDPOINT = Uri.parse(FIRTS_PART_URL+SEND_PATH)
+        } else {
+            ENDPOINT = Uri.parse(FIRTS_PART_URL + SEND_PATH)
                     .buildUpon()
                     .appendQueryParameter("idcode", Preferences.getIDcode(context))
-                    .appendQueryParameter("username",Preferences.getUsername(context))
-                    .appendQueryParameter("latitude", location.getLatitude()+"")
-                    .appendQueryParameter("longitude",location.getLongitude()+"")
-                    .appendQueryParameter("lastupdate",getUnixTime()+"")
-                    .appendQueryParameter("family",Preferences.getFamily(context))
+                    .appendQueryParameter("username", Preferences.getUsername(context))
+                    .appendQueryParameter("latitude", location.getLatitude() + "")
+                    .appendQueryParameter("longitude", location.getLongitude() + "")
+                    .appendQueryParameter("lastupdate", getUnixTime() + "")
+                    .appendQueryParameter("family", Preferences.getFamily(context))
                     .build();
         }
 
@@ -56,7 +56,7 @@ public class RESTfulHelper {
         } catch (IOException e) {
             e.printStackTrace();
             try {
-                Thread.sleep(1000*60*10);
+                Thread.sleep(1000 * 60 * 10);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
@@ -65,8 +65,8 @@ public class RESTfulHelper {
         return null;
     }
 
-    public String changeFamily(String family, Context context, boolean isToChange){
-        if(!isToChange)
+    public String changeFamily(String family, Context context, boolean isToChange) {
+        if (!isToChange)
             ENDPOINT = Uri.parse(FIRTS_PART_URL + CHANGE_FAMILY_PATH)
                     .buildUpon()
                     .appendQueryParameter("username", Preferences.getUsername(context))
@@ -79,9 +79,9 @@ public class RESTfulHelper {
                     .appendQueryParameter("username", Preferences.getUsername(context))
                     .appendQueryParameter("idcode", Preferences.getIDcode(context))
                     .appendQueryParameter("family", family)
-                    .appendQueryParameter("change","true")
+                    .appendQueryParameter("change", "true")
                     .build();
-        if(family.length()==0)
+        if (family.length() == 0)
             ENDPOINT = Uri.parse(FIRTS_PART_URL + CHANGE_FAMILY_PATH)
                     .buildUpon()
                     .appendQueryParameter("null_fam", "true")
@@ -95,8 +95,8 @@ public class RESTfulHelper {
         return null;
     }
 
-    public String changeUsername(String newusername, Context context, boolean isToChange){
-        if(!isToChange)
+    public String changeUsername(String newusername, Context context, boolean isToChange) {
+        if (!isToChange)
             ENDPOINT = Uri.parse(FIRTS_PART_URL + CHANGE_USERNAME_PATH)
                     .buildUpon()
                     .appendQueryParameter("username", Preferences.getUsername(context))
@@ -109,7 +109,7 @@ public class RESTfulHelper {
                     .appendQueryParameter("username", Preferences.getUsername(context))
                     .appendQueryParameter("idcode", Preferences.getIDcode(context))
                     .appendQueryParameter("new_username", newusername)
-                    .appendQueryParameter("change","true")
+                    .appendQueryParameter("change", "true")
                     .build();
         try {
             return getUrlString();
@@ -120,13 +120,13 @@ public class RESTfulHelper {
         return null;
     }
 
-    public String search(String username, String family){
-        if(family==null) {
+    public String search(String username, String family) {
+        if (family == null) {
             ENDPOINT = Uri.parse(FIRTS_PART_URL + DOWNLOAD_PATH)
                     .buildUpon()
                     .appendQueryParameter("username", username)
-                .build();
-        }else{
+                    .build();
+        } else {
             ENDPOINT = Uri.parse(FIRTS_PART_URL + DOWNLOAD_PATH)
                     .buildUpon()
                     .appendQueryParameter("username", username)
@@ -139,7 +139,7 @@ public class RESTfulHelper {
         } catch (IOException e) {
             e.printStackTrace();
             try {
-                Thread.sleep(1000*60*10);
+                Thread.sleep(1000 * 60 * 10);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
@@ -148,13 +148,13 @@ public class RESTfulHelper {
         return null;
     }
 
-    public String sendUser(String username, String password, String idcode, Context context){
+    public String sendUser(String username, String password, String idcode, Context context) {
 
-        ENDPOINT = Uri.parse(FIRTS_PART_URL+REGISTER_PATH)
+        ENDPOINT = Uri.parse(FIRTS_PART_URL + REGISTER_PATH)
                 .buildUpon()
                 .appendQueryParameter("idcode", idcode)
-                .appendQueryParameter("username",username)
-                .appendQueryParameter("password",password)
+                .appendQueryParameter("username", username)
+                .appendQueryParameter("password", password)
                 .build();
 
         try {
@@ -166,12 +166,12 @@ public class RESTfulHelper {
         return null;
     }
 
-    public String getUser(String username, String password){
+    public String getUser(String username, String password) {
 
-        ENDPOINT = Uri.parse(FIRTS_PART_URL+LOGIN_PATH)
+        ENDPOINT = Uri.parse(FIRTS_PART_URL + LOGIN_PATH)
                 .buildUpon()
-                .appendQueryParameter("username",username)
-                .appendQueryParameter("password",password)
+                .appendQueryParameter("username", username)
+                .appendQueryParameter("password", password)
                 .build();
 
         try {
@@ -185,7 +185,7 @@ public class RESTfulHelper {
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
-        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             InputStream in = connection.getInputStream();
@@ -213,7 +213,7 @@ public class RESTfulHelper {
 
 
     @Deprecated
-    public String execURL(){
+    public String execURL() {
         try {
             URL url = new URL(ENDPOINT.toString());
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -224,13 +224,13 @@ public class RESTfulHelper {
                 final_object += str;
 
             return final_object;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    private long getUnixTime(){
+    private long getUnixTime() {
         Calendar calendar = Calendar.getInstance();
         long now = calendar.getTimeInMillis();
         return now;

@@ -1,8 +1,15 @@
 package com.epiccrown.map.minimap;
 
+import android.Manifest;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +28,8 @@ import android.widget.TextView;
 import com.epiccrown.map.minimap.Fragments.Family;
 import com.epiccrown.map.minimap.Fragments.Home;
 import com.epiccrown.map.minimap.Fragments.Profile;
+import com.epiccrown.map.minimap.ServiceStuff.Tracker;
+import com.epiccrown.map.minimap.ServiceStuff.TrackerJob;
 import com.epiccrown.map.minimap.account.LoginActivity;
 import com.epiccrown.map.minimap.ServiceStuff.ServicesManager;
 
@@ -35,6 +44,7 @@ public class iTrackedActivity extends AppCompatActivity
     DrawerLayout drawer;
 
     private Fragment fragmentToSet;
+    private int err_count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +58,43 @@ public class iTrackedActivity extends AppCompatActivity
     }
 
     private void startTracking() {
-        ServicesManager manager = new ServicesManager(this);
-        manager.startTracking();
+//        ServicesManager manager = new ServicesManager(this);
+//        manager.startTracking();
+        if (err_count < 2) {
+            boolean permissions_granted = true;
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                permissions_granted = false;
+                err_count++;
+                ActivityCompat.requestPermissions(iTrackedActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+            }
+
+            JobScheduler scheduler = (JobScheduler) this.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+            boolean hasBeenScheduled = false;
+            for (JobInfo jobInfo : scheduler.getAllPendingJobs()) {
+                if (jobInfo.getId() == TrackerJob.ID) {
+                    hasBeenScheduled = true;
+                    if (!permissions_granted)
+                        scheduler.cancel(TrackerJob.ID);
+                }
+            }
+            if (permissions_granted)
+                if (!hasBeenScheduled) {
+                    JobInfo jobInfo = new JobInfo.Builder(
+                            TrackerJob.ID, new ComponentName(this, TrackerJob.class))
+                            .setPeriodic(1000 * 60 * 15)
+                            .setPersisted(true)
+                            .build();
+                    scheduler.schedule(jobInfo);
+                }
+        }
+
     }
+
 
     private void setUpDefaultMethods() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -75,8 +106,8 @@ public class iTrackedActivity extends AppCompatActivity
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                if(fragmentToSet!=null)
-                showPrimaryFragment(fragmentToSet);
+                if (fragmentToSet != null)
+                    showPrimaryFragment(fragmentToSet);
             }
 
 
@@ -91,6 +122,18 @@ public class iTrackedActivity extends AppCompatActivity
         View headview = navigationView.getHeaderView(0);
         username_label = headview.findViewById(R.id.username_label);
         username_label.setText(Preferences.getUsername(this));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startTracking();
+                }
+            }
+        }
     }
 
     @Override

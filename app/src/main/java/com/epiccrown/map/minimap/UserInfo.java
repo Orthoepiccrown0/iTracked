@@ -2,7 +2,7 @@ package com.epiccrown.map.minimap;
 
 import java.io.Serializable;
 
-public class UserInfo implements Serializable{
+public class UserInfo implements Serializable {
     private String latitude;
     private String longitude;
     private String username;

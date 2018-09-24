@@ -8,7 +8,7 @@ import java.util.Date;
 
 public abstract class UsefulStaticMethods {
 
-    public static String getDate(long milliSeconds, String dateFormat){
+    public static String getDate(long milliSeconds, String dateFormat) {
         // Create a DateFormatter object for displaying date in specified format.
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
 
@@ -18,36 +18,36 @@ public abstract class UsefulStaticMethods {
         return formatter.format(calendar.getTime());
     }
 
-    public static long getUnixTime(){
+    public static long getUnixTime() {
         Calendar calendar = Calendar.getInstance();
         return calendar.getTimeInMillis();
     }
 
-    public static String getMD5string(String plaintext){
+    public static String getMD5string(String plaintext) {
         try {
             MessageDigest m = MessageDigest.getInstance("MD5");
             m.reset();
             m.update(plaintext.getBytes());
             byte[] digest = m.digest();
-            BigInteger bigInt = new BigInteger(1,digest);
+            BigInteger bigInt = new BigInteger(1, digest);
             String hashtext = bigInt.toString(16);
-            while(hashtext.length() < 32 ){
-                hashtext = "0"+hashtext;
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
             }
             return hashtext;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    public static String getDiffTime(long last){
+    public static String getDiffTime(long last) {
         Date lastdate = new Date(last);
         Date nowdate = new Date();
 
         long diff = nowdate.getTime() - lastdate.getTime();
         long diffMinutes = diff / (60 * 1000) % 60;
 
-        return diffMinutes+"";
+        return diffMinutes + "";
     }
 }

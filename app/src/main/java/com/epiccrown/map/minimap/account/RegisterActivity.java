@@ -60,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String tmp_pass = input_password.getText().toString().trim();
                 String tmp_pass_repeat = input_password_repeat.getText().toString().trim();
 
-                if(checkUsername(tmp_username)&&checkPasswords(tmp_pass,tmp_pass_repeat)){
+                if (checkUsername(tmp_username) && checkPasswords(tmp_pass, tmp_pass_repeat)) {
                     new SendUser().execute();
                 }
             }
@@ -75,8 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
         error_message = findViewById(R.id.error_msg_register);
     }
 
-    private boolean checkUsername(String username){
-        if(!(username.length()>3)){
+    private boolean checkUsername(String username) {
+        if (!(username.length() > 3)) {
             error_message.setVisibility(View.VISIBLE);
             error_message.setText(getResources().getText(R.string.register_error_short_username));
             return false;
@@ -85,40 +85,40 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean checkPasswords(String pass1, String pass2){
-        if(pass1.length()>4){
-            if(pass1.equals(pass2)){
+    private boolean checkPasswords(String pass1, String pass2) {
+        if (pass1.length() > 4) {
+            if (pass1.equals(pass2)) {
                 Password = UsefulStaticMethods.getMD5string(pass1);
-                idcode = UsefulStaticMethods.getMD5string(Username+Password);
-                Preferences.setIDcode(getApplicationContext(),idcode);
+                idcode = UsefulStaticMethods.getMD5string(Username + Password);
+                Preferences.setIDcode(getApplicationContext(), idcode);
                 return true;
-            }else{
+            } else {
                 error_message.setVisibility(View.VISIBLE);
                 error_message.setText(getResources().getText(R.string.register_error_different_pass));
                 return false;
             }
-        }else{
+        } else {
             error_message.setVisibility(View.VISIBLE);
             error_message.setText(getResources().getText(R.string.register_error_short_password));
             return false;
         }
     }
 
-    class SendUser extends AsyncTask<Void,Void,String>{
+    class SendUser extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
             progressDialog.show();
-            return new RESTfulHelper().sendUser(Username,Password,idcode,getApplicationContext());
+            return new RESTfulHelper().sendUser(Username, Password, idcode, getApplicationContext());
         }
 
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
-            if(s.trim().equals("User exist")){
+            if (s.trim().equals("User exist")) {
                 error_message.setVisibility(View.VISIBLE);
                 error_message.setText(getResources().getText(R.string.register_error_user_exist));
-            }else{
+            } else {
                 try {
                     JSONObject jsonObject = new JSONObject(s);
                     String username = jsonObject.getString("username");
@@ -126,18 +126,18 @@ public class RegisterActivity extends AppCompatActivity {
                     Preferences.setIDcode(RegisterActivity.this, idcode);
                     Preferences.setUsername(RegisterActivity.this, username);
                     Preferences.setLogged(RegisterActivity.this, true);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 Intent intent = new Intent(RegisterActivity.this, iTrackedActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         }
 
         @Override
         protected void onCancelled(String s) {
-            Toast.makeText(RegisterActivity.this,"An error occurred",Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
         }
     }
 

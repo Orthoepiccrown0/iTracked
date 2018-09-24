@@ -15,6 +15,7 @@ public class Preferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(ServiceStarted, false);
     }
+
     public static void setServiceStarted(Context context, boolean started) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
@@ -22,60 +23,60 @@ public class Preferences {
                 .apply();
     }
 
-    public static String getIDcode(Context context){
+    public static String getIDcode(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(IDcode,null);
+                .getString(IDcode, null);
     }
 
-    public static void setIDcode(Context context, String idCode){
+    public static void setIDcode(Context context, String idCode) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putString(IDcode, idCode)
                 .apply();
     }
 
-    public static String getUsername(Context context){
+    public static String getUsername(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(USERNAME_REQUEST,null);
+                .getString(USERNAME_REQUEST, null);
     }
 
-    public static void setUsername(Context context, String username){
+    public static void setUsername(Context context, String username) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putString(USERNAME_REQUEST, username)
                 .apply();
     }
 
-    public static boolean isLogged(Context context){
+    public static boolean isLogged(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getBoolean(LOG_CHECK,false);
+                .getBoolean(LOG_CHECK, false);
     }
 
-    public static void setLogged(Context context, boolean isLogged){
+    public static void setLogged(Context context, boolean isLogged) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(LOG_CHECK, isLogged)
                 .apply();
     }
 
-    public static String getFamily(Context context){
+    public static String getFamily(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(FAMILY_KEY,null);
+                .getString(FAMILY_KEY, null);
     }
 
-    public static void setFamily(Context context, String family){
+    public static void setFamily(Context context, String family) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putString(FAMILY_KEY, family)
                 .apply();
     }
 
-    public static boolean isAlwaysTracked(Context context){
+    public static boolean isAlwaysTracked(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getBoolean(ALWAYS_TRACKED,true);
+                .getBoolean(ALWAYS_TRACKED, true);
     }
 
-    public static void setAlwaysTrackedEnabled(Context context, boolean enabled){
+    public static void setAlwaysTrackedEnabled(Context context, boolean enabled) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(ALWAYS_TRACKED, enabled)

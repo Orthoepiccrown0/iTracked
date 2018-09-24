@@ -37,13 +37,14 @@ public class Family extends Fragment {
     private boolean save_cliccked = false;
 
     private String newFamily = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        count_handler = new Handler(Looper.myLooper()){
+        count_handler = new Handler(Looper.myLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                members_count.setText(msg.arg1+"");
+                members_count.setText(msg.arg1 + "");
             }
         };
     }
@@ -51,7 +52,7 @@ public class Family extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.family_fragment,container,false);
+        View v = inflater.inflate(R.layout.family_fragment, container, false);
         save_btn = v.findViewById(R.id.family_save_btn);
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,16 +78,16 @@ public class Family extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 
-                if(s.toString().trim().length()>1){
+                if (s.toString().trim().length() > 1) {
                     newFamily = s.toString().trim();
                     save_btn.show();
-                    save_cliccked=false;
+                    save_cliccked = false;
                     new FamilyChecker().execute();
                 }
-                if(s.toString().trim().equals(Preferences.getFamily(getActivity())))
+                if (s.toString().trim().equals(Preferences.getFamily(getActivity())))
                     save_btn.hide();
 
-                if(s.toString().trim().length()==0)
+                if (s.toString().trim().length() == 0)
                     save_btn.hide();
             }
 
@@ -103,51 +104,51 @@ public class Family extends Fragment {
     }
 
     private void setMembers() {
-        if(Preferences.getFamily(getActivity())!=null){
+        if (Preferences.getFamily(getActivity()) != null) {
             newFamily = Preferences.getFamily(getActivity());
             new FamilyChecker().execute();
         }
     }
 
-    private class FamilyChecker extends AsyncTask<Void,Void,String>{
+    private class FamilyChecker extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
             RESTfulHelper helper = new RESTfulHelper();
-            if(save_cliccked)
-                return helper.changeFamily(newFamily,getActivity(),true);
+            if (save_cliccked)
+                return helper.changeFamily(newFamily, getActivity(), true);
 
-            return helper.changeFamily(newFamily,getContext(),false);
+            return helper.changeFamily(newFamily, getContext(), false);
         }
 
         @Override
         protected void onPostExecute(String s) {
-            if(s!=null){
-                if(s.equals("User updated successfully")){
-                    Preferences.setFamily(getActivity(),newFamily);
+            if (s != null) {
+                if (s.equals("User updated successfully")) {
+                    Preferences.setFamily(getActivity(), newFamily);
                     return;
                 }
 
-                try{
+                try {
                     final int members = Integer.parseInt(s);
                     final int start = Integer.parseInt(members_count.getText().toString());
                     //сделать handler который меняет количество членов семьи
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            countmembers(start,members);
+                            countmembers(start, members);
                         }
                     }).start();
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         }
     }
 
-    private void countmembers(int start, int members){
-        if(start<=members){
-            for(int i = start;i<members;i++){
+    private void countmembers(int start, int members) {
+        if (start <= members) {
+            for (int i = start; i < members; i++) {
                 Message msg = Message.obtain();
                 msg.arg1 = ++i;
                 count_handler.sendMessage(msg);
@@ -157,8 +158,8 @@ public class Family extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }else{
-            for(int i = start;i>members;i--){
+        } else {
+            for (int i = start; i > members; i--) {
                 Message msg = Message.obtain();
                 msg.arg1 = --i;
                 count_handler.sendMessage(msg);

@@ -1,43 +1,52 @@
 package com.epiccrown.map.minimap.ServiceStuff;
 
 import android.Manifest;
-import android.app.IntentService;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.epiccrown.map.minimap.Preferences;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
 
-public class Tracker extends IntentService {
+public class TrackerJob extends JobService {
+    private Sender sender;
     private Location lastlocation = null;
-    LocationManager manager;
+    private LocationManager manager;
 
-    public Tracker() {
-        super("iTracker service");
+    public static final int ID = 56;
+    JobParameters jobParameters;
+    @Override
+    public boolean onStartJob(JobParameters jobParameters) {
+        this.jobParameters = jobParameters;
+        getPostition();
+        return true;
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        //Toast.makeText(getApplicationContext(),"Service Started",Toast.LENGTH_SHORT).show();
-        Log.i("SERVICE iTracked", "SERVICE STARTED");
+    public boolean onStopJob(JobParameters jobParameters) {
+        if (sender != null)
+            sender.cancel(true);
+        return false;
+    }
+
+    private void getPostition(){
         final LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 lastlocation = location;
-                new Sender().execute();
-                manager.removeUpdates(this);
-                //stopSelf();
+                if (lastlocation.getAccuracy() < 300) {
+                    sender = new Sender();
+                    sender.execute(jobParameters);
+                    manager.removeUpdates(this);
+                    jobFinished(jobParameters, false);
+                }
             }
 
             @Override
@@ -59,23 +68,19 @@ public class Tracker extends IntentService {
 
 
         if (manager != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
             manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, listener);
+
         }
     }
 
-    @Override
-    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        return START_NOT_STICKY;
-    }
-
-    //Sender
-    class Sender extends AsyncTask<Void, Void, String> {
+    private class Sender extends AsyncTask<JobParameters, Void, String> {
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(JobParameters... voids) {
+
             if (lastlocation != null && Preferences.isLogged(getApplicationContext())) {
                 RESTfulHelper helper = new RESTfulHelper();
                 return helper.sendInfo(lastlocation, getApplication());
@@ -95,9 +100,14 @@ public class Tracker extends IntentService {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        //Toast.makeText(getApplicationContext(),"Service Destroyed",Toast.LENGTH_LONG).show();
-        Log.i("SERVICE iTracked", "SERVICE DESTROYED");
+    private class Finder extends AsyncTask<JobParameters, Void, Void> {
+
+        @Override
+        protected Void doInBackground(final JobParameters... jobParameters) {
+
+            return null;
+        }
+
+
     }
 }
