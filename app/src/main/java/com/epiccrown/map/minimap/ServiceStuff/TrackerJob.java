@@ -100,14 +100,5 @@ public class TrackerJob extends JobService {
         }
     }
 
-    private class Finder extends AsyncTask<JobParameters, Void, Void> {
 
-        @Override
-        protected Void doInBackground(final JobParameters... jobParameters) {
-
-            return null;
-        }
-
-
-    }
 }

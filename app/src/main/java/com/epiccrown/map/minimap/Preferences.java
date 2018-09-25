@@ -4,22 +4,22 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 public class Preferences {
-    private final static String ServiceStarted = "ServiceStarted";
+    private final static String TRACKING_INTERVAL = "tracking_interval";
     private final static String IDcode = "idcode";
     private final static String LOG_CHECK = "lgurs";
     private final static String USERNAME_REQUEST = "usernamereq";
     private final static String FAMILY_KEY = "family_key";
     private final static String ALWAYS_TRACKED = "tracktion";
 
-    public static boolean getServiceStarted(Context context) {
+    public static long getTrackingInterval(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getBoolean(ServiceStarted, false);
+                .getLong(TRACKING_INTERVAL, 1000*60*15);
     }
 
-    public static void setServiceStarted(Context context, boolean started) {
+    public static void setTrackingInterval(Context context, long interval) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
-                .putBoolean(ServiceStarted, started)
+                .putLong(TRACKING_INTERVAL, interval)
                 .apply();
     }
 

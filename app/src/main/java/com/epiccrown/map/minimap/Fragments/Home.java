@@ -1,11 +1,13 @@
 package com.epiccrown.map.minimap.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +21,6 @@ import android.widget.TextView;
 
 import com.epiccrown.map.minimap.MapsActivity;
 import com.epiccrown.map.minimap.R;
-import com.epiccrown.map.minimap.ServiceStuff.Tracker;
 import com.epiccrown.map.minimap.UserInfo;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
 import com.epiccrown.map.minimap.helpers.UsefulStaticMethods;
@@ -140,6 +141,7 @@ public class Home extends Fragment {
             TextView longt;
             TextView last_update;
             CardView card;
+            ConstraintLayout button;
 
             ItemHolder(View itemView) {
                 super(itemView);
@@ -148,6 +150,7 @@ public class Home extends Fragment {
                 longt = itemView.findViewById(R.id.user_longitude);
                 last_update = itemView.findViewById(R.id.user_last_update);
                 card = itemView.findViewById(R.id.card);
+                button = itemView.findViewById(R.id.item_locate);
             }
 
             void bindItem(final UserInfo user) {
@@ -158,23 +161,35 @@ public class Home extends Fragment {
                 longt.setText("Longitude: " + user.getLongitude());
                 last_update.setText(date);
 
-                card.setOnClickListener(new View.OnClickListener() {
+//                card.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        getMap(user);
+//                    }
+//                });
+
+                button.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), MapsActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("target", user);
-                        intent.putExtra("target_bundle", bundle);
-                        try {
-                            getActivity().startActivity(intent);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
+                    public void onClick(View view) {
+                        getMap(user);
                     }
                 });
             }
+
+            private void getMap(UserInfo user){
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("target", user);
+                intent.putExtra("target_bundle", bundle);
+                try {
+                    getActivity().startActivity(intent);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
+
 
     class SearchTrackers extends AsyncTask<Void, Void, String> {
 

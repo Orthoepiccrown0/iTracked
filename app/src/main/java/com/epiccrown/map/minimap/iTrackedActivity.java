@@ -28,10 +28,8 @@ import android.widget.TextView;
 import com.epiccrown.map.minimap.Fragments.Family;
 import com.epiccrown.map.minimap.Fragments.Home;
 import com.epiccrown.map.minimap.Fragments.Profile;
-import com.epiccrown.map.minimap.ServiceStuff.Tracker;
 import com.epiccrown.map.minimap.ServiceStuff.TrackerJob;
 import com.epiccrown.map.minimap.account.LoginActivity;
-import com.epiccrown.map.minimap.ServiceStuff.ServicesManager;
 
 public class iTrackedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -58,8 +56,6 @@ public class iTrackedActivity extends AppCompatActivity
     }
 
     private void startTracking() {
-//        ServicesManager manager = new ServicesManager(this);
-//        manager.startTracking();
         if (err_count < 2) {
             boolean permissions_granted = true;
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -80,9 +76,10 @@ public class iTrackedActivity extends AppCompatActivity
             }
             if (permissions_granted)
                 if (!hasBeenScheduled) {
+                long interval = Preferences.getTrackingInterval(this);
                     JobInfo jobInfo = new JobInfo.Builder(
                             TrackerJob.ID, new ComponentName(this, TrackerJob.class))
-                            .setPeriodic(1000 * 60 * 15)
+                            .setPeriodic(interval)
                             .setPersisted(true)
                             .build();
                     scheduler.schedule(jobInfo);
@@ -227,6 +224,9 @@ public class iTrackedActivity extends AppCompatActivity
         Preferences.setLogged(this, false);
         Preferences.setUsername(this, null);
         Preferences.setIDcode(this, null);
+        Preferences.setTrackingInterval(this,1000*60*15);
+        Preferences.setAlwaysTrackedEnabled(this,true);
+        Preferences.setFamily(this,null);
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

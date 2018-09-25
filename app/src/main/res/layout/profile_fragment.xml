@@ -25,6 +25,7 @@
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:adjustViewBounds="true"
+                    android:contentDescription="header"
                     android:cropToPadding="true"
                     android:scaleType="centerCrop"
                     android:visibility="visible"
@@ -52,15 +53,47 @@
                     android:id="@+id/textView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
                     android:text="@string/profile_details"
                     android:textAlignment="viewStart"
                     android:textStyle="italic"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/switch_always_tracked" />
+                    app:layout_constraintTop_toBottomOf="@+id/trackingIntervalGroup" />
+
+                <RadioGroup
+                    android:id="@+id/trackingIntervalGroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4">
+
+                    <RadioButton
+                        android:id="@+id/fiftin_min_radiobtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="15m" />
+
+                    <RadioButton
+                        android:id="@+id/twenty_min_radiobtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="20m" />
+
+                    <RadioButton
+                        android:id="@+id/twentyfive_min_radiobtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="25m" />
+                </RadioGroup>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/family_text_layout"
@@ -73,16 +106,27 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView">
+                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    app:errorEnabled="true">
 
-                    <EditText
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/profile_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/profile_new_username_hint"
                         android:inputType="textPersonName"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        />
                 </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/profile_interval_hint"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/switch_always_tracked" />
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
 

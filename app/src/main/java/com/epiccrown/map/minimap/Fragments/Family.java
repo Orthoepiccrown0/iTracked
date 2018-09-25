@@ -88,7 +88,8 @@ public class Family extends Fragment {
                     save_btn.hide();
 
                 if (s.toString().trim().length() == 0)
-                    save_btn.hide();
+                    save_btn.show();
+
             }
 
             @Override

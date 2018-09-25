@@ -82,8 +82,7 @@ public class RESTfulHelper {
                     .appendQueryParameter("change", "true")
                     .build();
         if (family.length() == 0)
-            ENDPOINT = Uri.parse(FIRTS_PART_URL + CHANGE_FAMILY_PATH)
-                    .buildUpon()
+            ENDPOINT.buildUpon()
                     .appendQueryParameter("null_fam", "true")
                     .build();
         try {

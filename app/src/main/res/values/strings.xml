@@ -8,6 +8,8 @@
     <string name="register_button">Register</string>
     <string name="login_button">Login</string>
 
+    <string name="home_button">Locate</string>
+
     <string name="register_error_short_username">Your username is too short</string>
     <string name="register_error_short_password">Your password is too short</string>
     <string name="register_error_different_pass">Your passwords are different</string>
@@ -29,6 +31,7 @@
     <string name="user_info_box_time">m ago</string>
 
     <string name="profile_new_username_hint">Username</string>
+    <string name="profile_interval_hint">Interval of updating in minutes:</string>
     <string name="profile_new_username_hint_user_exist">Username is not available</string>
     <string name="profile_new_username_hint_user_available">Username is available</string>
     <string name="profile_startup_text">Always tracked</string>
