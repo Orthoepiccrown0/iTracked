@@ -72,9 +72,11 @@ public class iTrackedActivity extends AppCompatActivity
                     hasBeenScheduled = true;
                     if (!permissions_granted)
                         scheduler.cancel(TrackerJob.ID);
+                    else if(!isLocationProviderEnabled())
+                        scheduler.cancel(TrackerJob.ID);
                 }
             }
-            if (permissions_granted)
+            if (permissions_granted && isLocationProviderEnabled())
                 if (!hasBeenScheduled) {
                 long interval = Preferences.getTrackingInterval(this);
                     JobInfo jobInfo = new JobInfo.Builder(
@@ -84,10 +86,40 @@ public class iTrackedActivity extends AppCompatActivity
                             .build();
                     scheduler.schedule(jobInfo);
                 }
+            if(!isLocationProviderEnabled()){
+                
+            }
         }
 
     }
+    
+    private void requestLocationAccess(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+    dialog.setMessage(getResources().getString(R.string.gps_network_not_enabled));
+    dialog.setPositiveButton(getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                // TODO Auto-generated method stub
+                Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(myIntent);
+                //get gps
+            }
+        });
+    dialog.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 
+            @Override
+            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                // TODO Auto-generated method stub
+                Toast.makeToast(iTrackedActivity.this, getResources().getString(R.string.location_not_enabled),Toast.LENGTH_LONG).show();
+            }
+        });
+    dialog.show();      
+    }
+
+    private boolean isLocationProviderEnabled(){
+        LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)&&lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
 
     private void setUpDefaultMethods() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
