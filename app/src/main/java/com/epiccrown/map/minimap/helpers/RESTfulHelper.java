@@ -3,7 +3,6 @@ package com.epiccrown.map.minimap.helpers;
 import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.epiccrown.map.minimap.Preferences;
 
@@ -14,7 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class RESTfulHelper {

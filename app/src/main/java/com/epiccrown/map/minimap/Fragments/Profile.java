@@ -41,6 +41,7 @@ public class Profile extends Fragment {
     private boolean save_cliccked = false;
     private String newUsername = null;
     private long newInterval;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,18 +57,18 @@ public class Profile extends Fragment {
         intervalGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i){
+                switch (i) {
                     case R.id.fiftin_min_radiobtn:
-                        newInterval = 1000*60*15;
+                        newInterval = 1000 * 60 * 15;
                         break;
                     case R.id.twenty_min_radiobtn:
-                        newInterval = 1000*60*20;
+                        newInterval = 1000 * 60 * 20;
                         break;
                     case R.id.twentyfive_min_radiobtn:
-                        newInterval = 1000*60*25;
+                        newInterval = 1000 * 60 * 25;
                         break;
                 }
-                if(radio_btn_checked == i)
+                if (radio_btn_checked == i)
                     save_btn.hide();
                 else
                     save_btn.show();
@@ -80,7 +81,7 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(Preferences.getTrackingInterval(getActivity())!=newInterval) {
+                if (Preferences.getTrackingInterval(getActivity()) != newInterval) {
                     Preferences.setTrackingInterval(getActivity(), newInterval);
                     trackingControlChangeInterval(newInterval);
                 }
@@ -143,23 +144,23 @@ public class Profile extends Fragment {
         setEnabledRadioButtons(always_tracked_switch.isChecked());
     }
 
-    private void setEnabledRadioButtons(boolean enabled){
-        for(int i = 0; i<intervalGroup.getChildCount();i++){
+    private void setEnabledRadioButtons(boolean enabled) {
+        for (int i = 0; i < intervalGroup.getChildCount(); i++) {
             intervalGroup.getChildAt(i).setEnabled(enabled);
         }
     }
 
     private void restoreInterval() {
         newInterval = Preferences.getTrackingInterval(getActivity());
-        if(newInterval==1000*60*15) {
+        if (newInterval == 1000 * 60 * 15) {
             intervalGroup.check(R.id.fiftin_min_radiobtn);
-        }else if(newInterval==1000*60*20) {
+        } else if (newInterval == 1000 * 60 * 20) {
             intervalGroup.check(R.id.twenty_min_radiobtn);
-        }else if(newInterval==1000*60*25) {
+        } else if (newInterval == 1000 * 60 * 25) {
             intervalGroup.check(R.id.twentyfive_min_radiobtn);
-        }else{
-            newInterval = 1000*60*15;
-            Preferences.setTrackingInterval(getActivity(),newInterval);
+        } else {
+            newInterval = 1000 * 60 * 15;
+            Preferences.setTrackingInterval(getActivity(), newInterval);
         }
         radio_btn_checked = intervalGroup.getCheckedRadioButtonId();
     }

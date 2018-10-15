@@ -10,13 +10,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 
 import com.epiccrown.map.minimap.Preferences;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
-import com.epiccrown.map.minimap.helpers.UsefulStaticMethods;
 
 public class TrackerJob extends JobService {
     private Sender sender;
@@ -25,6 +22,7 @@ public class TrackerJob extends JobService {
 
     public static final int ID = 56;
     JobParameters jobParameters;
+
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         this.jobParameters = jobParameters;
@@ -39,7 +37,7 @@ public class TrackerJob extends JobService {
         return false;
     }
 
-    private void getPostition(){
+    private void getPostition() {
         final LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {

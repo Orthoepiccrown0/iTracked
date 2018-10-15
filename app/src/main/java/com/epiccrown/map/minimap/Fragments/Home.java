@@ -175,7 +175,7 @@ public class Home extends Fragment {
                 });
             }
 
-            private void getMap(UserInfo user){
+            private void getMap(UserInfo user) {
                 Intent intent = new Intent(getActivity(), MapsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("target", user);

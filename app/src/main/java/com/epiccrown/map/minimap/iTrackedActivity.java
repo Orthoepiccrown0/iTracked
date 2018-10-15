@@ -12,20 +12,20 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,12 +40,11 @@ public class iTrackedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    DrawerLayout drawer;
     private TextView username_label;
     private Fragment home;
     private Fragment profile;
     private Fragment family;
-    DrawerLayout drawer;
-
     private Fragment fragmentToSet;
     private int err_count = 0;
 
@@ -143,8 +142,6 @@ public class iTrackedActivity extends AppCompatActivity
                 if (fragmentToSet != null)
                     showPrimaryFragment(fragmentToSet);
             }
-
-
 
 
         };
@@ -262,10 +259,20 @@ public class iTrackedActivity extends AppCompatActivity
         Preferences.setTrackingInterval(this, 1000 * 60 * 15);
         Preferences.setAlwaysTrackedEnabled(this, true);
         Preferences.setFamily(this, null);
+        disableJob();
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    private void disableJob() {
+        JobScheduler scheduler = (JobScheduler) this.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        for (JobInfo jobInfo : scheduler.getAllPendingJobs()) {
+            if (jobInfo.getId() == TrackerJob.ID) {
+                scheduler.cancel(TrackerJob.ID);
+            }
+        }
     }
 
     private void isLogged() {
