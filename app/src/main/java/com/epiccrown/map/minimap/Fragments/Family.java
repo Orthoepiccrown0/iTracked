@@ -84,8 +84,7 @@ public class Family extends Fragment {
                 }
                 if (s.toString().trim().equals(Preferences.getFamily(getActivity())))
                     save_btn.hide();
-
-                if (s.toString().trim().length() == 0)
+                else if (s.toString().trim().length() == 0)
                     save_btn.show();
 
             }

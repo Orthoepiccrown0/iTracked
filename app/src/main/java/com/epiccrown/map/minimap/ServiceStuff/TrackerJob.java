@@ -29,9 +29,6 @@ public class TrackerJob extends JobService {
     public boolean onStartJob(JobParameters jobParameters) {
         this.jobParameters = jobParameters;
         getPostition();
-        String log = "\nTime: " + UsefulStaticMethods.getDate(System.currentTimeMillis(),"hh:mm")
-                    +"\nDescription: job started";
-        Preferences.addLog(getApplicationContext(),log);
         return true;
     }
 

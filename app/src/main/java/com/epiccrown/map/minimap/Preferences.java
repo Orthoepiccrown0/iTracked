@@ -62,7 +62,7 @@ public class Preferences {
 
     public static String getFamily(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(FAMILY_KEY, null);
+                .getString(FAMILY_KEY, "");
     }
 
     public static void setFamily(Context context, String family) {
@@ -82,28 +82,5 @@ public class Preferences {
                 .edit()
                 .putBoolean(ALWAYS_TRACKED, enabled)
                 .apply();
-    }
-
-    public static String getLog(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(LOG, null);
-    }
-
-    public static void addLog(Context context, String log) {
-        String completeLog = getLog(context);
-        if (completeLog == null) completeLog = log + "\n/////////////////////////////////////";
-        else completeLog = completeLog + log + "\n/////////////////////////////////////";
-
-        PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putString(LOG, completeLog)
-                .apply();
-    }
-
-    public static void clearLog(Context context){
-        PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putString(LOG,null)
-                .commit();
     }
 }

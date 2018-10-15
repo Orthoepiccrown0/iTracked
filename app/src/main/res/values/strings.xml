@@ -47,4 +47,9 @@
     <string name="family_details">Feature called "family" is  used to identify more people
         at the same time and connect all your friends/family in one group to simplify the search.
     </string>
+
+    <string name="gps_network_not_enabled">GPS is not enabled</string>
+    <string name="open_location_settings">GPS is not enabled</string>
+    <string name="cancel">Cancel</string>
+    <string name="location_not_enabled">Your position will not be displayed</string>
 </resources>

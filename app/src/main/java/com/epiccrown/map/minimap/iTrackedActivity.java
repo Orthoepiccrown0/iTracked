@@ -5,14 +5,18 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.epiccrown.map.minimap.Fragments.Family;
 import com.epiccrown.map.minimap.Fragments.Home;
@@ -72,13 +77,13 @@ public class iTrackedActivity extends AppCompatActivity
                     hasBeenScheduled = true;
                     if (!permissions_granted)
                         scheduler.cancel(TrackerJob.ID);
-                    else if(!isLocationProviderEnabled())
+                    else if (!isLocationProviderEnabled())
                         scheduler.cancel(TrackerJob.ID);
                 }
             }
             if (permissions_granted && isLocationProviderEnabled())
                 if (!hasBeenScheduled) {
-                long interval = Preferences.getTrackingInterval(this);
+                    long interval = Preferences.getTrackingInterval(this);
                     JobInfo jobInfo = new JobInfo.Builder(
                             TrackerJob.ID, new ComponentName(this, TrackerJob.class))
                             .setPeriodic(interval)
@@ -86,39 +91,39 @@ public class iTrackedActivity extends AppCompatActivity
                             .build();
                     scheduler.schedule(jobInfo);
                 }
-            if(!isLocationProviderEnabled()){
-                
+            if (!isLocationProviderEnabled()) {
+                requestLocationAccess();
             }
         }
 
     }
-    
-    private void requestLocationAccess(){
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-    dialog.setMessage(getResources().getString(R.string.gps_network_not_enabled));
-    dialog.setPositiveButton(getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
+
+    private void requestLocationAccess() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage(getResources().getString(R.string.gps_network_not_enabled));
+        dialog.setPositiveButton(getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                 // TODO Auto-generated method stub
-                Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(myIntent);
                 //get gps
             }
         });
-    dialog.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                 // TODO Auto-generated method stub
-                Toast.makeToast(iTrackedActivity.this, getResources().getString(R.string.location_not_enabled),Toast.LENGTH_LONG).show();
+                Toast.makeText(iTrackedActivity.this, getResources().getString(R.string.location_not_enabled), Toast.LENGTH_LONG).show();
             }
         });
-    dialog.show();      
+        dialog.show();
     }
 
-    private boolean isLocationProviderEnabled(){
-        LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)&&lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    private boolean isLocationProviderEnabled() {
+        LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER) && lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     private void setUpDefaultMethods() {
@@ -138,6 +143,8 @@ public class iTrackedActivity extends AppCompatActivity
                 if (fragmentToSet != null)
                     showPrimaryFragment(fragmentToSet);
             }
+
+
 
 
         };
@@ -215,6 +222,7 @@ public class iTrackedActivity extends AppCompatActivity
         } else if (id == R.id.menu_home) {
             //showPrimaryFragment(home);
             fragmentToSet = home;
+            hideKeyboard();
         }
         closeDrawer();
         return true;
@@ -251,9 +259,9 @@ public class iTrackedActivity extends AppCompatActivity
         Preferences.setLogged(this, false);
         Preferences.setUsername(this, null);
         Preferences.setIDcode(this, null);
-        Preferences.setTrackingInterval(this,1000*60*15);
-        Preferences.setAlwaysTrackedEnabled(this,true);
-        Preferences.setFamily(this,null);
+        Preferences.setTrackingInterval(this, 1000 * 60 * 15);
+        Preferences.setAlwaysTrackedEnabled(this, true);
+        Preferences.setFamily(this, null);
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

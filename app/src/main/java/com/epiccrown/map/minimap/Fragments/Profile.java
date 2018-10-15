@@ -87,12 +87,7 @@ public class Profile extends Fragment {
 
                 if (tracking_changed) {
                     Preferences.setAlwaysTrackedEnabled(getContext(), always_tracked_switch.isChecked());
-
-                    if (!always_tracked_switch.isChecked()) {
-                        trackingControl(false);
-                    } else {
-                        trackingControl(true);
-                    }
+                    trackingControl(always_tracked_switch.isChecked());
                 }
                 if (username_available) {
                     save_cliccked = true;
