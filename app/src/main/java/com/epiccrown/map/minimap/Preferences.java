@@ -10,10 +10,11 @@ public class Preferences {
     private final static String USERNAME_REQUEST = "usernamereq";
     private final static String FAMILY_KEY = "family_key";
     private final static String ALWAYS_TRACKED = "tracktion";
+    private final static String LOG = "logtext";
 
     public static long getTrackingInterval(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getLong(TRACKING_INTERVAL, 1000*60*15);
+                .getLong(TRACKING_INTERVAL, 1000 * 60 * 15);
     }
 
     public static void setTrackingInterval(Context context, long interval) {
@@ -81,5 +82,28 @@ public class Preferences {
                 .edit()
                 .putBoolean(ALWAYS_TRACKED, enabled)
                 .apply();
+    }
+
+    public static String getLog(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(LOG, null);
+    }
+
+    public static void addLog(Context context, String log) {
+        String completeLog = getLog(context);
+        if (completeLog == null) completeLog = log + "\n/////////////////////////////////////";
+        else completeLog = completeLog + log + "\n/////////////////////////////////////";
+
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(LOG, completeLog)
+                .apply();
+    }
+
+    public static void clearLog(Context context){
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(LOG,null)
+                .commit();
     }
 }

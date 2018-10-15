@@ -1,19 +1,15 @@
 package com.epiccrown.map.minimap.Fragments;
 
-import android.Manifest;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -25,13 +21,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.epiccrown.map.minimap.Preferences;
 import com.epiccrown.map.minimap.R;
 import com.epiccrown.map.minimap.ServiceStuff.TrackerJob;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
-import com.epiccrown.map.minimap.iTrackedActivity;
 
 public class Profile extends Fragment {
     FloatingActionButton save_btn;
@@ -178,7 +172,7 @@ public class Profile extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.profile_fragment, container, false);
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
         return v;
     }

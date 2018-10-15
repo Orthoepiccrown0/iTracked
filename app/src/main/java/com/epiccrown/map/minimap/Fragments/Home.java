@@ -1,6 +1,5 @@
 package com.epiccrown.map.minimap.Fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -52,7 +51,7 @@ public class Home extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.home_layout, container, false);
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
         mRecycler = v.findViewById(R.id.users_list_recycler);
         searchView = v.findViewById(R.id.simpleSearchView);
         progressBar = v.findViewById(R.id.home_progressbar);

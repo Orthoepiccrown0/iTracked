@@ -15,9 +15,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.epiccrown.map.minimap.Preferences;
@@ -52,7 +50,7 @@ public class Family extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.family_fragment, container, false);
+        View v = inflater.inflate(R.layout.fragment_family, container, false);
         save_btn = v.findViewById(R.id.family_save_btn);
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
