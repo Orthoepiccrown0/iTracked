@@ -67,7 +67,7 @@ public class TrackerJob extends JobService {
 
             @Override
             public void onProviderDisabled(String provider) {
-
+                manager.removeUpdates(this);
             }
         };
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
