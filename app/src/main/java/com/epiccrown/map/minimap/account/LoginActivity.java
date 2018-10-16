@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getWindow().setBackgroundDrawableResource(R.drawable.login_backround_img);
         hideActionBar();
         assignVariables();
         registerLink();
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (checkUsername(tmp_username) && checkPassword(clear_password)) {
                     Username = tmp_username;
                     Password = UsefulStaticMethods.getMD5string(clear_password);
+                    progressDialog.show();
                     new GetUser().execute();
                 }
             }
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... voids) {
-            progressDialog.show();
+
             RESTfulHelper helper = new RESTfulHelper();
             return helper.getUser(Username, Password);
         }

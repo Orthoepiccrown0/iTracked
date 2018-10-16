@@ -38,10 +38,20 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getWindow().setBackgroundDrawableResource(R.drawable.register_background_img);
         setTitle("Register");
         assignVariables();
+        hideActionBar();
         onRegisterClick();
         setUpProgressBar();
+    }
+
+    private void hideActionBar() {
+        try {
+            getSupportActionBar().hide();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void setUpProgressBar() {
@@ -61,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String tmp_pass_repeat = input_password_repeat.getText().toString().trim();
 
                 if (checkUsername(tmp_username) && checkPasswords(tmp_pass, tmp_pass_repeat)) {
+                    progressDialog.show();
                     new SendUser().execute();
                 }
             }
@@ -76,11 +87,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean checkUsername(String username) {
+        if(username.length()==0){
+            error_message.setVisibility(View.VISIBLE);
+            error_message.setText(getResources().getText(R.string.register_error_pick_username));
+            return false;
+        }
+
         if (!(username.length() > 3)) {
             error_message.setVisibility(View.VISIBLE);
             error_message.setText(getResources().getText(R.string.register_error_short_username));
             return false;
         }
+
         Username = username;
         return true;
     }
@@ -108,7 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... voids) {
-            progressDialog.show();
             return new RESTfulHelper().sendUser(Username, Password, idcode, getApplicationContext());
         }
 

@@ -21,10 +21,21 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/niceyellow</item>
+        <item name="colorAccent">@color/nice_grey</item>
 
-        <item name="colorControlActivated">@color/niceyellow</item>
-        <item name="colorControlHighlight">@color/niceyellow</item>
+        <item name="colorControlActivated">@color/nice_grey</item>
+        <item name="colorControlHighlight">@color/nice_grey</item>
+
+    </style>
+
+    <style name="Edittext.register" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
 
     </style>
 

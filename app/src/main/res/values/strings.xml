@@ -11,6 +11,7 @@
     <string name="home_button">Locate</string>
 
     <string name="register_error_short_username">Your username is too short</string>
+    <string name="register_error_pick_username">Pick up your username</string>
     <string name="register_error_short_password">Your password is too short</string>
     <string name="register_error_different_pass">Your passwords are different</string>
     <string name="register_error_user_exist">User already exists</string>
