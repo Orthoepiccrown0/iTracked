@@ -1,5 +1,9 @@
 package com.epiccrown.map.minimap.helpers;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
@@ -41,13 +45,10 @@ public abstract class UsefulStaticMethods {
         return null;
     }
 
-    public static String getDiffTime(long last) {
-        Date lastdate = new Date(last);
-        Date nowdate = new Date();
-
-        long diff = nowdate.getTime() - lastdate.getTime();
-        long diffMinutes = diff / (60 * 1000) % 60;
-
-        return diffMinutes + "";
+    public static boolean isNetworkAvailable(Context context){
+        if(context==null) return false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 }

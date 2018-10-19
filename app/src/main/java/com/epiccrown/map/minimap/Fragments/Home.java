@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -38,6 +39,9 @@ public class Home extends Fragment {
     private RecyclerView mRecycler;
     private SearchView searchView;
     private ProgressBar progressBar;
+    private RelativeLayout searchHint;
+    private RelativeLayout searchFailed;
+    private RelativeLayout noConnection;
     private List<UserInfo> users = new ArrayList<>();
     private String usersQuery = "";
 
@@ -55,8 +59,11 @@ public class Home extends Fragment {
         mRecycler = v.findViewById(R.id.users_list_recycler);
         searchView = v.findViewById(R.id.simpleSearchView);
         progressBar = v.findViewById(R.id.home_progressbar);
+        searchHint = v.findViewById(R.id.home_search_hint);
+        searchFailed = v.findViewById(R.id.home_search_failed);
+        noConnection = v.findViewById(R.id.home_search_no_connection);
         setUpSearch();
-
+        searchHint.setVisibility(View.VISIBLE);
         return v;
     }
 
@@ -70,8 +77,20 @@ public class Home extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.trim().length() > 0) {
+                    searchHint.setVisibility(View.GONE);
+                    searchFailed.setVisibility(View.GONE);
                     usersQuery = newText;
-                    new SearchTrackers().execute();
+                    if(UsefulStaticMethods.isNetworkAvailable(getActivity()))
+                        new SearchTrackers().execute();
+                    else
+                        noConnection.setVisibility(View.VISIBLE);
+                }else{
+                    searchFailed.setVisibility(View.GONE);
+                    noConnection.setVisibility(View.GONE);
+                    searchHint.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    users.clear();
+                    setAdapter();
                 }
                 return false;
             }
@@ -160,13 +179,6 @@ public class Home extends Fragment {
                 longt.setText("Longitude: " + user.getLongitude());
                 last_update.setText(date);
 
-//                card.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        getMap(user);
-//                    }
-//                });
-
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -206,24 +218,37 @@ public class Home extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             users.clear();
-            try {
-                JSONArray array = new JSONArray(s);
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject jsonObject = array.getJSONObject(i);
-                    UserInfo userInfo = new UserInfo();
-                    userInfo.setFamily(jsonObject.getString("family"));
-                    userInfo.setLastupdate(jsonObject.getString("lastupdate"));
-                    userInfo.setLatitude(jsonObject.getString("latitude"));
-                    userInfo.setLongitude(jsonObject.getString("longitude"));
-                    userInfo.setUsername(jsonObject.getString("username"));
-                    users.add(userInfo);
+            resetAllHints();
+            if (s.trim().equals("Empty")) {
+                searchFailed.setVisibility(View.VISIBLE);
+            }else {
+                try {
+                    JSONArray array = new JSONArray(s);
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonObject = array.getJSONObject(i);
+                        UserInfo userInfo = new UserInfo();
+                        userInfo.setFamily(jsonObject.getString("family"));
+                        userInfo.setLastupdate(jsonObject.getString("lastupdate"));
+                        userInfo.setLatitude(jsonObject.getString("latitude"));
+                        userInfo.setLongitude(jsonObject.getString("longitude"));
+                        userInfo.setUsername(jsonObject.getString("username"));
+                        users.add(userInfo);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
             progressBar.setVisibility(View.GONE);
+            if(users.size()!=0)
             setAdapter();
 
         }
+
+        private void resetAllHints() {
+            searchHint.setVisibility(View.GONE);
+            searchFailed.setVisibility(View.GONE);
+            noConnection.setVisibility(View.GONE);
+        }
+
     }
 }

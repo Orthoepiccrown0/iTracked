@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">iTracked</string>
+    <string name="title_activity_maps">Карта</string>
+    <string name="search_hint">Поиск</string>
+    <string name="username_hint">Логин</string>
+    <string name="password_hint">Пароль</string>
+    <string name="password_hint_repeat">Повторите пароль</string>
+    <string name="register_button">Зарегестрироваться</string>
+    <string name="login_button">Войти</string>
+    <string name="home_button">Показать на карте</string>
+    <string name="register_error_short_username">Слишком короткий логин</string>
+    <string name="register_error_pick_username">Выберите себе логин</string>
+    <string name="register_error_short_password">Пароль слишком короткий</string>
+    <string name="register_error_different_pass">Пароли не совпадают</string>
+    <string name="register_error_user_exist">Пользователь уже существует</string>
+    <string name="login_error_nope">Что-то пошло не так :(</string>
+    <string name="main_menu_exit">Выйти</string>
+    <string name="main_menu_gps">Отслеживать ваше положение</string>
+    <string name="action_settings">Настройки</string>
+    <string name="profile_new_username_hint">Логин</string>
+    <string name="profile_interval_hint">Интервал обновления (в мин)</string>
+    <string name="profile_new_username_hint_user_exist">Пользователь уже существует</string>
+    <string name="profile_new_username_hint_user_available">Логин доступен</string>
+    <string name="profile_startup_text">Всегда отслеживать</string>
+    <string name="home_search_no_internet_connection">Проверьте подключение к интернету</string>
+    <string name="home_search_failed">Мы не смогли ничего найти</string>
+    <string name="home_search_hint_icon">Начните поиск!</string>
+    <string name="location_not_enabled">Ваша локация не будет отображена</string>
+    <string name="cancel">Отмена</string>
+    <string name="open_location_settings">Открыть настройки</string>
+    <string name="gps_network_not_enabled">GPS не включен</string>
+    <string name="family_details">"Параметр Семья используется для того чтобы обьеденить больше людей вместе и для того чтобы облегчить поиск ваших друзей или вашей семьи.     "</string>
+    <string name="family_members_count">Кол-во участников</string>
+    <string name="family_hint">Семья</string>
+    <string name="profile_details">iTracked использует ваше местоположение чтобы отправить его через интернет и дать возможность вашим друзьям найти вас в любой момент! Вы можете выключить свою геолокацию но некоторые возможности станут недоступными</string>
+</resources>
