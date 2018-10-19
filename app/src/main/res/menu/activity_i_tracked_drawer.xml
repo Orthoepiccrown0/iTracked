@@ -7,15 +7,15 @@
         android:id="@+id/group0">
         <item
             android:id="@+id/menu_home"
-            android:title="Home"
+            android:title="@string/nav_home"
             android:icon="@drawable/home" />
         <item
             android:id="@+id/menu_username"
-            android:title="Profile"
+            android:title="@string/nav_profile"
             android:icon="@drawable/person" />
         <item
             android:id="@+id/menu_family"
-            android:title="Family"
+            android:title="@string/nav_family"
             android:icon="@drawable/family_icon" />
 
     </group>

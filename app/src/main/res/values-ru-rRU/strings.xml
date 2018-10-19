@@ -30,8 +30,11 @@
     <string name="cancel">Отмена</string>
     <string name="open_location_settings">Открыть настройки</string>
     <string name="gps_network_not_enabled">GPS не включен</string>
-    <string name="family_details">"Параметр Семья используется для того чтобы обьеденить больше людей вместе и для того чтобы облегчить поиск ваших друзей или вашей семьи.     "</string>
+    <string name="family_details">"Параметр Группа используется для того чтобы обьеденить больше людей вместе и для того чтобы облегчить поиск ваших друзей или вашей семьи.     "</string>
     <string name="family_members_count">Кол-во участников</string>
     <string name="family_hint">Семья</string>
     <string name="profile_details">iTracked использует ваше местоположение чтобы отправить его через интернет и дать возможность вашим друзьям найти вас в любой момент! Вы можете выключить свою геолокацию но некоторые возможности станут недоступными</string>
+    <string name="nav_profile">Профиль</string>
+    <string name="nav_family">Группы</string>
+    <string name="nav_home">Главная</string>
 </resources>
