@@ -122,7 +122,7 @@ public class iTrackedActivity extends AppCompatActivity
 
     private boolean isLocationProviderEnabled() {
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER) && lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     private void setUpDefaultMethods() {
