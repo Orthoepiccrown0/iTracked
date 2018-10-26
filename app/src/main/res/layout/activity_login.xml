@@ -2,9 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-
-    android:fitsSystemWindows="true">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,31 +12,31 @@
         android:paddingTop="56dp"
         android:paddingRight="24dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/roboto"
+            android:text="iTracked"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/cardview_light_background" />
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:fontFamily="@font/roboto"
-                android:text="iTracked"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:textColor="@color/cardview_light_background" />
-
-            <!-- Email Label -->
+        <!-- Email Label -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="@drawable/login_style_textfields"
+            android:orientation="vertical"
             android:padding="8dp">
+
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/username_txtinut"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:theme="@style/Edittext">
+                android:theme="@style/Edittext"
+                app:errorEnabled="true">
 
                 <EditText
                     android:id="@+id/input_email"
@@ -52,11 +50,11 @@
 
             <!-- Password Label -->
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/password_txtinut"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:theme="@style/Edittext"
+                app:errorEnabled="true"
                 app:passwordToggleEnabled="true">
 
                 <EditText
@@ -90,17 +88,6 @@
             android:text="No account yet? Create one"
             android:textColor="@color/cardview_light_background"
             android:textSize="16dip" />
-
-        <TextView
-            android:id="@+id/error_msg_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="No account yet? Create one"
-            android:textColor="@android:color/holo_red_light"
-            android:textSize="16dip"
-            android:visibility="invisible" />
 
     </LinearLayout>
 </ScrollView>

@@ -2,11 +2,14 @@ package com.epiccrown.map.minimap.account;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -23,11 +26,10 @@ import com.epiccrown.map.minimap.iTrackedActivity;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
-    EditText input_email;
-    EditText input_password;
+    TextInputLayout input_email;
+    TextInputLayout input_password;
     Button btn_login;
     TextView link_signup;
-    TextView error_message;
     ProgressDialog progressDialog;
 
     private String Username;
@@ -37,8 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getWindow().setBackgroundDrawableResource(R.drawable.login_backround_img);
-        hideActionBar();
+        getWindow().setBackgroundDrawableResource(R.drawable.login_background_img);
+        //hideActionBar();
         assignVariables();
         registerLink();
         onLoginClick();
@@ -56,15 +58,25 @@ public class LoginActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tmp_username = input_email.getText().toString().trim();
-                String clear_password = input_password.getText().toString().trim();
+                String tmp_username = input_email.getEditText().getText().toString().trim();
+                String clear_password = input_password.getEditText().getText().toString().trim();
 
                 if (checkUsername(tmp_username) && checkPassword(clear_password)) {
                     Username = tmp_username;
                     Password = UsefulStaticMethods.getMD5string(clear_password);
                     progressDialog.show();
                     new GetUser().execute();
+                    return;
                 }
+                if(!checkUsername(tmp_username))
+                    input_email.setError(getResources().getString(R.string.login_error_put_username));
+                else
+                    input_email.setError(null);
+
+                if(!checkPassword(clear_password))
+                    input_password.setError(getResources().getString(R.string.login_error_put_password));
+                else
+                    input_password.setError(null);
             }
         });
     }
@@ -96,11 +108,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void assignVariables() {
-        input_email = findViewById(R.id.input_email);
-        input_password = findViewById(R.id.input_password);
+        input_email = findViewById(R.id.username_txtinut);
+        input_password = findViewById(R.id.password_txtinut);
         btn_login = findViewById(R.id.btn_login);
         link_signup = findViewById(R.id.link_signup);
-        error_message = findViewById(R.id.error_msg_login);
     }
 
     private void hideActionBar() {
@@ -109,6 +120,22 @@ public class LoginActivity extends AppCompatActivity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void showErrorDialog(String title, String errorMessage) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(errorMessage);
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     class GetUser extends AsyncTask<Void, Void, String> {
@@ -124,8 +151,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
             if (s.equals("Nope")) {
-                error_message.setVisibility(View.VISIBLE);
-                error_message.setText(getResources().getText(R.string.login_error_nope));
+                showErrorDialog(getResources().getString(R.string.register_error_warning),getResources().getString(R.string.login_error_nope));
             } else {
                 try {
                     JSONObject jsonObject = new JSONObject(s);

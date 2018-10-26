@@ -1,9 +1,11 @@
 package com.epiccrown.map.minimap.account;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +27,6 @@ public class RegisterActivity extends AppCompatActivity {
     EditText input_password;
     EditText input_password_repeat;
     Button register_btn;
-    TextView error_message;
 
     ProgressDialog progressDialog;
 
@@ -41,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawableResource(R.drawable.register_background_img);
         setTitle("Register");
         assignVariables();
-        hideActionBar();
+        //hideActionBar();
         onRegisterClick();
         setUpProgressBar();
     }
@@ -83,19 +84,22 @@ public class RegisterActivity extends AppCompatActivity {
         input_password = findViewById(R.id.input_password_register);
         input_password_repeat = findViewById(R.id.input_password_repeat_register);
         register_btn = findViewById(R.id.btn_register);
-        error_message = findViewById(R.id.error_msg_register);
+        //error_message = findViewById(R.id.error_msg_register);
     }
 
     private boolean checkUsername(String username) {
-        if(username.length()==0){
-            error_message.setVisibility(View.VISIBLE);
-            error_message.setText(getResources().getText(R.string.register_error_pick_username));
+        if (username.length() == 0) {
+            showErrorDialog(getResources().getString(R.string.register_error_warning), getResources().getString(R.string.register_error_pick_username));
             return false;
         }
 
         if (!(username.length() > 3)) {
-            error_message.setVisibility(View.VISIBLE);
-            error_message.setText(getResources().getText(R.string.register_error_short_username));
+            showErrorDialog(getResources().getString(R.string.register_error_warning), getResources().getString(R.string.register_error_short_username));
+            return false;
+        }
+
+        if(username.contains(" ")){
+            showErrorDialog(getResources().getString(R.string.register_error_warning), getResources().getString(R.string.register_error_short_username));
             return false;
         }
 
@@ -111,15 +115,29 @@ public class RegisterActivity extends AppCompatActivity {
                 Preferences.setIDcode(getApplicationContext(), idcode);
                 return true;
             } else {
-                error_message.setVisibility(View.VISIBLE);
-                error_message.setText(getResources().getText(R.string.register_error_different_pass));
+                showErrorDialog(getResources().getString(R.string.register_error_warning), getResources().getString(R.string.register_error_different_pass));
                 return false;
             }
         } else {
-            error_message.setVisibility(View.VISIBLE);
-            error_message.setText(getResources().getText(R.string.register_error_short_password));
+            showErrorDialog(getResources().getString(R.string.register_error_warning), getResources().getString(R.string.register_error_short_password));
             return false;
         }
+    }
+
+    private void showErrorDialog(String title, String errorMessage) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(errorMessage);
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     class SendUser extends AsyncTask<Void, Void, String> {
@@ -133,8 +151,7 @@ public class RegisterActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
             if (s.trim().equals("User exist")) {
-                error_message.setVisibility(View.VISIBLE);
-                error_message.setText(getResources().getText(R.string.register_error_user_exist));
+                showErrorDialog(getResources().getString(R.string.register_error_warning), getResources().getString(R.string.register_error_user_exist));
             } else {
                 try {
                     JSONObject jsonObject = new JSONObject(s);
@@ -143,6 +160,10 @@ public class RegisterActivity extends AppCompatActivity {
                     Preferences.setIDcode(RegisterActivity.this, idcode);
                     Preferences.setUsername(RegisterActivity.this, username);
                     Preferences.setLogged(RegisterActivity.this, true);
+
+                    Intent intent = new Intent(RegisterActivity.this, iTrackedActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

@@ -145,7 +145,6 @@ public class Home extends Fragment {
         public void onBindViewHolder(@NonNull UserInfoAdapter.ItemHolder holder, int position) {
             UserInfo user = items.get(position);
             holder.bindItem(user);
-
         }
 
         @Override
@@ -158,6 +157,7 @@ public class Home extends Fragment {
             TextView lat;
             TextView longt;
             TextView last_update;
+            TextView user_has_no_position;
             CardView card;
             ConstraintLayout button;
 
@@ -169,22 +169,41 @@ public class Home extends Fragment {
                 last_update = itemView.findViewById(R.id.user_last_update);
                 card = itemView.findViewById(R.id.card);
                 button = itemView.findViewById(R.id.item_locate);
+                user_has_no_position = itemView.findViewById(R.id.user_has_no_position);
             }
 
             void bindItem(final UserInfo user) {
-                String date = UsefulStaticMethods.getDate(Long.parseLong(user.getLastupdate()), "dd/MM/yyyy HH:mm");
 
-                username.setText(user.getUsername());
-                lat.setText("Latitude: " + user.getLatitude());
-                longt.setText("Longitude: " + user.getLongitude());
-                last_update.setText(date);
+                if(user.getLatitude().equals("has_no_position")) {
+                    button.setBackground(getResources().getDrawable(R.drawable.home_disabled_button));
+                    user_has_no_position.setVisibility(View.VISIBLE);
+                    lat.setVisibility(View.GONE);
+                    longt.setVisibility(View.GONE);
+                    last_update.setVisibility(View.GONE);
+                    username.setText(user.getUsername());
+                }else {
+                    button.setBackground(getResources().getDrawable(R.drawable.home_onclick_button));
+                    user_has_no_position.setVisibility(View.GONE);
+                    lat.setVisibility(View.VISIBLE);
+                    longt.setVisibility(View.VISIBLE);
+                    last_update.setVisibility(View.VISIBLE);
 
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getMap(user);
-                    }
-                });
+                    String date = UsefulStaticMethods.getDate(Long.parseLong(user.getLastupdate()), "dd/MM/yyyy HH:mm");
+                    username.setText(user.getUsername());
+                    lat.setText("Latitude: " + user.getLatitude());
+                    longt.setText("Longitude: " + user.getLongitude());
+                    last_update.setText(date);
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getMap(user);
+                        }
+                    });
+                }
+
+
+
+
             }
 
             private void getMap(UserInfo user) {
@@ -234,7 +253,9 @@ public class Home extends Fragment {
                         userInfo.setUsername(jsonObject.getString("username"));
                         users.add(userInfo);
                     }
+                    searchFailed.setVisibility(View.INVISIBLE);
                 } catch (JSONException e) {
+                    searchFailed.setVisibility(View.VISIBLE);
                     e.printStackTrace();
                 }
             }

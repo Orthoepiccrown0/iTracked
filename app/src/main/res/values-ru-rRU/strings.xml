@@ -32,9 +32,14 @@
     <string name="gps_network_not_enabled">GPS не включен</string>
     <string name="family_details">"Параметр Группа используется для того чтобы обьеденить больше людей вместе и для того чтобы облегчить поиск ваших друзей или вашей семьи.     "</string>
     <string name="family_members_count">Кол-во участников</string>
-    <string name="family_hint">Семья</string>
+    <string name="family_hint">Группа</string>
     <string name="profile_details">iTracked использует ваше местоположение чтобы отправить его через интернет и дать возможность вашим друзьям найти вас в любой момент! Вы можете выключить свою геолокацию но некоторые возможности станут недоступными</string>
     <string name="nav_profile">Профиль</string>
     <string name="nav_family">Группы</string>
     <string name="nav_home">Главная</string>
+    <string name="register_error_warning">Внимание</string>
+    <string name="register_error_space_username">Вы не можете использовать пробелы в своем никнейме</string>
+    <string name="login_error_put_username">Введите свой никнейм</string>
+    <string name="login_error_put_password">Введите свой пароль</string>
+    <string name="home_user_has_no_position">Пользователь еще не обновил свою позицию</string>
 </resources>
