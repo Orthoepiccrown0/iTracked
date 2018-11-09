@@ -35,8 +35,7 @@
     <string name="nav_header_title" translatable="false">Android Studio</string>
     <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
-    <string name="nav_profile">Profile</string>
-    <string name="nav_family">Groups</string>
+    <string name="nav_settings">Settings</string>
     <string name="nav_home">Home</string>
     <string name="action_settings">Settings</string>
 
@@ -47,6 +46,9 @@
     <string name="profile_new_username_hint_user_exist">Username is not available</string>
     <string name="profile_new_username_hint_user_available">Username is available</string>
     <string name="profile_startup_text">Always tracked</string>
+    <string name="profile_interval_15">Every 15 minutes</string>
+    <string name="profile_interval_25">Every 25 minutes</string>
+    <string name="profile_interval_35">Every 35 minutes</string>
 
     <string name="family_hint">Group</string>
     <string name="family_members_count">Members: </string>
@@ -57,4 +59,28 @@
     <string name="cancel">Cancel</string>
     <string name="location_not_enabled">Your position will not be displayed</string>
     <string name="profile_details">iTracked uses your GPS location and send it across the Internet         to give access to your friend or family to find you at any time!         You can forbid access to your location due to your privacy but         some functionality will not work</string>
+    <string name="nav_favs">Favourites</string>
+    <string name="profile_number_users">How many users we can save in the history?</string>
+    <string name="profile_always_tracked_hint">Send your position on the server</string>
+    <string name="profile_current_number_users">Now we can save</string>
+    <string name="profile_current_number_users_last">users</string>
+    <string name="nav_history">History</string>
+    <string name="profile_delete_user">Delete account</string>
+    <string name="profile_settings_username_hint">You can choose a username on iTracked. Other people will be able to find you by this username and find you at any time.</string>
+    <string name="profile_settings_username_rules">You can use a-z, 0-9 and underscores.\nMinimum length is 5 characters.</string>
+    <string name="profile_new_username_hint_user_is_you">You are currently using this username!</string>
+    <string name="profile_new_username_hint_checking">Checking this username...</string>
+    <string name="profile_settings_group_hint">You can choose a group name on iTracked. Other people will be able to find you by this group name and find you at any time.</string>
+    <string name="profile_settings_group_members">Members:</string>
+    <string name="favorites_hint_explain">Here you can see all your favs!</string>
+    <string name="favorites_hint_error">Something gone wrong, we working on it</string>
+    <string name="favorites_snackbar_deleted_message">removed</string>
+    <string name="favorites_snackbar_deleted_undo">UNDO</string>
+    <string name="history_hint_message">Here you can see your history</string>
+    <string name="history_menu_delete_history">Delete history</string>
+    <string name="favorites_menu_delete_favs">Delete all favs</string>
+    <string name="profile_delete_confirm_title">Warning</string>
+    <string name="profile_delete_confirm_message">Are you sure to delete your account? This action cannot be undone!</string>
+    <string name="profile_delete_confirm_yes">OK</string>
+    <string name="profile_delete_confirm_no">Cancel</string>
 </resources>

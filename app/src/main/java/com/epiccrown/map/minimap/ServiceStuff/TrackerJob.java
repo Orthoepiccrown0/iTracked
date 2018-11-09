@@ -1,7 +1,9 @@
 package com.epiccrown.map.minimap.ServiceStuff;
 
 import android.Manifest;
+import android.app.job.JobInfo;
 import android.app.job.JobParameters;
+import android.app.job.JobScheduler;
 import android.app.job.JobService;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -26,8 +28,19 @@ public class TrackerJob extends JobService {
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         this.jobParameters = jobParameters;
-        getPostition();
+        if(Preferences.isAlwaysTracked(getApplicationContext()))
+            getPostition();
+        else
+            cancelJob();
+
         return true;
+    }
+
+    private void cancelJob() {
+        JobScheduler scheduler = (JobScheduler) this.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        for (JobInfo jobInfo : scheduler.getAllPendingJobs())
+            if (jobInfo.getId() == TrackerJob.ID)
+                scheduler.cancel(TrackerJob.ID);
     }
 
     @Override
@@ -42,12 +55,11 @@ public class TrackerJob extends JobService {
             @Override
             public void onLocationChanged(Location location) {
                 lastlocation = location;
-                if (lastlocation.getAccuracy() < 300) {
-                    sender = new Sender();
-                    sender.execute(jobParameters);
-                    manager.removeUpdates(this);
-                    jobFinished(jobParameters, false);
-                }
+                sender = new Sender();
+                sender.execute(jobParameters);
+                manager.removeUpdates(this);
+                jobFinished(jobParameters, false);
+
             }
 
             @Override
@@ -91,13 +103,13 @@ public class TrackerJob extends JobService {
 
         @Override
         protected void onPostExecute(String s) {
-            if (s.equals("New record created successfully")) {
-                //Toast.makeText(getApplicationContext(),"New record created successfully",Toast.LENGTH_SHORT).show();
-            } else if (s.equals("Record updated successfully")) {
-                //Toast.makeText(getApplicationContext(),"Record updated successfully",Toast.LENGTH_SHORT).show();
-            } else {
-                //Toast.makeText(getApplicationContext(),"Something has gone wrong",Toast.LENGTH_SHORT).show();
-            }
+//            if (s.equals("New record created successfully")) {
+//                //Toast.makeText(getApplicationContext(),"New record created successfully",Toast.LENGTH_SHORT).show();
+//            } else if (s.equals("Record updated successfully")) {
+//                //Toast.makeText(getApplicationContext(),"Record updated successfully",Toast.LENGTH_SHORT).show();
+//            } else {
+//                //Toast.makeText(getApplicationContext(),"Something has gone wrong",Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 

@@ -8,12 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 import com.epiccrown.map.minimap.MapsActivity;
 import com.epiccrown.map.minimap.R;
 import com.epiccrown.map.minimap.UserInfo;
+import com.epiccrown.map.minimap.databaseStuff.DatabaseDataGetter;
+import com.epiccrown.map.minimap.databaseStuff.DatabaseOpenHelper;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
 import com.epiccrown.map.minimap.helpers.UsefulStaticMethods;
 
@@ -42,6 +46,7 @@ public class Home extends Fragment {
     private RelativeLayout searchHint;
     private RelativeLayout searchFailed;
     private RelativeLayout noConnection;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private List<UserInfo> users = new ArrayList<>();
     private String usersQuery = "";
 
@@ -56,15 +61,43 @@ public class Home extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+        int colorAccent = getResources().getColor(R.color.colorAccent);
+        int colorPrimary= getResources().getColor(R.color.colorPrimary);
+        int colorPrimaryDark= getResources().getColor(R.color.colorPrimaryDark);
         mRecycler = v.findViewById(R.id.users_list_recycler);
         searchView = v.findViewById(R.id.simpleSearchView);
         progressBar = v.findViewById(R.id.home_progressbar);
         searchHint = v.findViewById(R.id.home_search_hint);
         searchFailed = v.findViewById(R.id.home_search_failed);
         noConnection = v.findViewById(R.id.home_search_no_connection);
+        swipeRefreshLayout = v.findViewById(R.id.home_swipe_refresh);
+        swipeRefreshLayout.setColorSchemeColors(colorPrimary,colorPrimaryDark,colorAccent);
+        setUpRefresh();
         setUpSearch();
+        adjustRefresh();
         searchHint.setVisibility(View.VISIBLE);
+
+//        DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(getContext());
+//        DatabaseDataGetter dataGetter = new DatabaseDataGetter(databaseOpenHelper);
+//        dataGetter.dropTable();
         return v;
+    }
+
+    private void adjustRefresh(){
+        if(users.size()>0) {
+            swipeRefreshLayout.setEnabled(true);
+        }else{
+            swipeRefreshLayout.setEnabled(false);
+        }
+    }
+
+    private void setUpRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new SearchTrackers().execute();
+            }
+        });
     }
 
     private void setUpSearch() {
@@ -80,11 +113,11 @@ public class Home extends Fragment {
                     searchHint.setVisibility(View.GONE);
                     searchFailed.setVisibility(View.GONE);
                     usersQuery = newText;
-                    if(UsefulStaticMethods.isNetworkAvailable(getActivity()))
+                    if (UsefulStaticMethods.isNetworkAvailable(getActivity()))
                         new SearchTrackers().execute();
                     else
                         noConnection.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     searchFailed.setVisibility(View.GONE);
                     noConnection.setVisibility(View.GONE);
                     searchHint.setVisibility(View.VISIBLE);
@@ -136,7 +169,7 @@ public class Home extends Fragment {
         @Override
         public UserInfoAdapter.ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            View v = inflater.inflate(R.layout.user_info_item, parent, false);
+            View v = inflater.inflate(R.layout.home_user_info_item, parent, false);
 
             return new UserInfoAdapter.ItemHolder(v);
         }
@@ -160,6 +193,7 @@ public class Home extends Fragment {
             TextView user_has_no_position;
             CardView card;
             ConstraintLayout button;
+            ImageView fav;
 
             ItemHolder(View itemView) {
                 super(itemView);
@@ -170,22 +204,25 @@ public class Home extends Fragment {
                 card = itemView.findViewById(R.id.card);
                 button = itemView.findViewById(R.id.item_locate);
                 user_has_no_position = itemView.findViewById(R.id.user_has_no_position);
+                fav = itemView.findViewById(R.id.fav_button);
             }
 
             void bindItem(final UserInfo user) {
 
-                if(user.getLatitude().equals("has_no_position")) {
+                if (user.getLatitude().equals("has_no_position")) {
                     button.setBackground(getResources().getDrawable(R.drawable.home_disabled_button));
                     user_has_no_position.setVisibility(View.VISIBLE);
                     lat.setVisibility(View.GONE);
                     longt.setVisibility(View.GONE);
                     last_update.setVisibility(View.GONE);
+                    fav.setVisibility(View.GONE);
                     username.setText(user.getUsername());
-                }else {
+                } else {
                     button.setBackground(getResources().getDrawable(R.drawable.home_onclick_button));
                     user_has_no_position.setVisibility(View.GONE);
                     lat.setVisibility(View.VISIBLE);
                     longt.setVisibility(View.VISIBLE);
+                    fav.setVisibility(View.VISIBLE);
                     last_update.setVisibility(View.VISIBLE);
 
                     String date = UsefulStaticMethods.getDate(Long.parseLong(user.getLastupdate()), "dd/MM/yyyy HH:mm");
@@ -197,12 +234,40 @@ public class Home extends Fragment {
                         @Override
                         public void onClick(View view) {
                             getMap(user);
+                            DatabaseOpenHelper openHelper = new DatabaseOpenHelper(getContext());
+                            DatabaseDataGetter dataGetter = new DatabaseDataGetter(openHelper,getContext());
+                            dataGetter.deleteIfPresent(user.getUsername());
+                            dataGetter.insertNewHistoryMember(user.getUsername());
+                        }
+                    });
+
+                    setFavResource(user);
+
+                    fav.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            DatabaseOpenHelper openHelper = new DatabaseOpenHelper(getContext());
+                            DatabaseDataGetter dataGetter = new DatabaseDataGetter(openHelper, getContext());
+                            if (user.isFav()) {
+                                dataGetter.deleteFav(user.getUsername());
+                                user.setFav(false);
+                            } else {
+                                dataGetter.insertFav(user.getUsername());
+                                user.setFav(true);
+                            }
+                            setFavResource(user);
                         }
                     });
                 }
 
 
+            }
 
+            private void setFavResource(UserInfo user) {
+                if (user.isFav())
+                    fav.setImageResource(R.drawable.ic_star_black_24dp);
+                else
+                    fav.setImageResource(R.drawable.ic_star_border_black_24dp);
 
             }
 
@@ -240,9 +305,12 @@ public class Home extends Fragment {
             resetAllHints();
             if (s.trim().equals("Empty")) {
                 searchFailed.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 try {
                     JSONArray array = new JSONArray(s);
+                    DatabaseOpenHelper openHelper = new DatabaseOpenHelper(getContext());
+                    DatabaseDataGetter dataGetter = new DatabaseDataGetter(openHelper, getContext());
+                    ArrayList<String> favs = dataGetter.getFavs();
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject jsonObject = array.getJSONObject(i);
                         UserInfo userInfo = new UserInfo();
@@ -251,6 +319,9 @@ public class Home extends Fragment {
                         userInfo.setLatitude(jsonObject.getString("latitude"));
                         userInfo.setLongitude(jsonObject.getString("longitude"));
                         userInfo.setUsername(jsonObject.getString("username"));
+                        for (String fav : favs)
+                            if (fav.equals(userInfo.getUsername()))
+                                userInfo.setFav(true);
                         users.add(userInfo);
                     }
                     searchFailed.setVisibility(View.INVISIBLE);
@@ -260,8 +331,9 @@ public class Home extends Fragment {
                 }
             }
             progressBar.setVisibility(View.GONE);
-            if(users.size()!=0)
-            setAdapter();
+            adjustRefresh();
+            if (users.size() != 0)
+                setAdapter();
 
         }
 
@@ -269,6 +341,7 @@ public class Home extends Fragment {
             searchHint.setVisibility(View.GONE);
             searchFailed.setVisibility(View.GONE);
             noConnection.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
         }
 
     }

@@ -15,26 +15,20 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.epiccrown.map.minimap.Preferences;
 import com.epiccrown.map.minimap.R;
 import com.epiccrown.map.minimap.helpers.RESTfulHelper;
 
-public class Family extends Fragment {
+public class Group extends Fragment {
+    TextInputLayout group;
+    FloatingActionButton fb;
+    TextView membersNum;
 
-    FloatingActionButton save_btn;
-    TextView members_count;
-    EditText family_input;
-    TextInputLayout textLayout;
-    Handler count_handler;
-
-    private boolean tracking_changed = false;
-    private boolean username_available = false;
+    private Handler count_handler;
     private boolean save_cliccked = false;
-
-    private String newFamily = null;
+    private String groupName;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,7 +36,7 @@ public class Family extends Fragment {
         count_handler = new Handler(Looper.myLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                members_count.setText(msg.arg1 + "");
+                membersNum.setText(msg.arg1 + "");
             }
         };
     }
@@ -50,62 +44,58 @@ public class Family extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_family, container, false);
-        save_btn = v.findViewById(R.id.family_save_btn);
-        save_btn.setOnClickListener(new View.OnClickListener() {
+        return inflater.inflate(R.layout.fragment_settings_group,container,false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        assignVariables(view);
+        assignJob();
+        if(!Preferences.getFamily(getContext()).equals(""))
+            group.getEditText().setText(Preferences.getFamily(getContext()));
+    }
+
+    private void assignJob() {
+        group.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.toString().trim().length()>=5||charSequence.toString().trim().length()==0){
+                    fb.show();
+                    groupName = charSequence.toString().trim();
+                    new FamilyChecker().execute();
+                }else {
+                    fb.hide();
+                }
+                if(charSequence.toString().trim().equals(Preferences.getFamily(getContext())))
+                    fb.hide();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        fb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 save_cliccked = true;
-                save_btn.hide();
+                fb.hide();
                 new FamilyChecker().execute();
             }
         });
-        save_btn.hide();
-
-        members_count = v.findViewById(R.id.family_count);
-
-        family_input = v.findViewById(R.id.family_name);
-        family_input.setText(Preferences.getFamily(getContext()));
-        family_input.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-
-                if (s.toString().trim().length() > 1) {
-                    newFamily = s.toString().trim();
-                    save_btn.show();
-                    save_cliccked = false;
-                    new FamilyChecker().execute();
-                }
-                if (s.toString().trim().equals(Preferences.getFamily(getActivity())))
-                    save_btn.hide();
-                else if (s.toString().trim().length() == 0)
-                    save_btn.show();
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        textLayout = v.findViewById(R.id.family_text_layout);
-
-        setMembers();
-        return v;
     }
 
-    private void setMembers() {
-        if (Preferences.getFamily(getActivity()) != null) {
-            newFamily = Preferences.getFamily(getActivity());
-            new FamilyChecker().execute();
-        }
+    private void assignVariables(View view) {
+        group = view.findViewById(R.id.group_inputLayout);
+        fb = view.findViewById(R.id.profile_settings_group_fb);
+        membersNum = view.findViewById(R.id.profile_settings_group_members_num);
     }
 
     private class FamilyChecker extends AsyncTask<Void, Void, String> {
@@ -114,23 +104,23 @@ public class Family extends Fragment {
         protected String doInBackground(Void... voids) {
             RESTfulHelper helper = new RESTfulHelper();
             if (save_cliccked)
-                return helper.changeFamily(newFamily, getActivity(), true);
+                return helper.changeFamily(groupName, getActivity(), true);
 
-            return helper.changeFamily(newFamily, getContext(), false);
+            return helper.changeFamily(groupName, getContext(), false);
         }
 
         @Override
         protected void onPostExecute(String s) {
             if (s != null) {
                 if (s.equals("User updated successfully")) {
-                    Preferences.setFamily(getActivity(), newFamily);
+                    Preferences.setFamily(getActivity(), groupName);
+                    save_cliccked = false;
                     return;
                 }
 
                 try {
                     final int members = Integer.parseInt(s);
-                    final int start = Integer.parseInt(members_count.getText().toString());
-                    //сделать handler который меняет количество членов семьи
+                    final int start = Integer.parseInt(membersNum.getText().toString());
                     new Thread(new Runnable() {
                         @Override
                         public void run() {

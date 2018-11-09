@@ -30,11 +30,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.epiccrown.map.minimap.Fragments.Family;
+import com.epiccrown.map.minimap.Fragments.Favorites;
+import com.epiccrown.map.minimap.Fragments.History;
 import com.epiccrown.map.minimap.Fragments.Home;
-import com.epiccrown.map.minimap.Fragments.Profile;
+import com.epiccrown.map.minimap.Fragments.SettingsProfile;
 import com.epiccrown.map.minimap.ServiceStuff.TrackerJob;
 import com.epiccrown.map.minimap.account.LoginActivity;
+import com.epiccrown.map.minimap.helpers.UsefulStaticMethods;
 
 public class iTrackedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,8 +45,9 @@ public class iTrackedActivity extends AppCompatActivity
     DrawerLayout drawer;
     private TextView username_label;
     private Fragment home;
-    private Fragment profile;
-    private Fragment family;
+    private Fragment settings;
+    private Fragment favs;
+    private Fragment history;
     private Fragment fragmentToSet;
     private int err_count = 0;
 
@@ -181,7 +184,7 @@ public class iTrackedActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.i_tracked, menu);
+        //getMenuInflater().inflate(R.menu.i_tracked, menu);
         return true;
     }
 
@@ -199,26 +202,29 @@ public class iTrackedActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.menu_username) {
-            if (profile == null)
-                profile = new Profile();
-            //showPrimaryFragment(profile);
-            fragmentToSet = profile;
+        if (id == R.id.menu_settings) {
+            if (settings == null)
+                settings = new SettingsProfile();
+            fragmentToSet = settings;
             hideKeyboard();
-        } else if (id == R.id.menu_family) {
-            if (family == null)
-                family = new Family();
-            //showPrimaryFragment(family);
-            fragmentToSet = family;
+        } else if (id == R.id.menu_favs) {
+            if (favs == null)
+                favs = new Favorites();
+            fragmentToSet = favs;
             hideKeyboard();
         } else if (id == R.id.menu_logout) {
-            deleteUser();
+            UsefulStaticMethods.deleteUserAndQuit(this);
         } else if (id == R.id.menu_home) {
-            //showPrimaryFragment(home);
+            if(home==null)
+                home = new Home();
             fragmentToSet = home;
+            hideKeyboard();
+        } else if (id == R.id.menu_history){
+            if(history==null)
+                history = new History();
+            fragmentToSet = history;
             hideKeyboard();
         }
         closeDrawer();
@@ -252,28 +258,7 @@ public class iTrackedActivity extends AppCompatActivity
         drawer.closeDrawers();
     }
 
-    private void deleteUser() {
-        Preferences.setLogged(this, false);
-        Preferences.setUsername(this, null);
-        Preferences.setIDcode(this, null);
-        Preferences.setTrackingInterval(this, 1000 * 60 * 15);
-        Preferences.setAlwaysTrackedEnabled(this, true);
-        Preferences.setFamily(this, null);
-        disableJob();
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
-
-    private void disableJob() {
-        JobScheduler scheduler = (JobScheduler) this.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        for (JobInfo jobInfo : scheduler.getAllPendingJobs()) {
-            if (jobInfo.getId() == TrackerJob.ID) {
-                scheduler.cancel(TrackerJob.ID);
-            }
-        }
-    }
 
     private void isLogged() {
         if (!Preferences.isLogged(this)) {

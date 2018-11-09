@@ -10,7 +10,7 @@ public class Preferences {
     private final static String USERNAME_REQUEST = "usernamereq";
     private final static String FAMILY_KEY = "family_key";
     private final static String ALWAYS_TRACKED = "tracktion";
-    private final static String LOG = "logtext";
+    private final static String NUMSAVS = "123656598985456";
 
     public static long getTrackingInterval(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
@@ -83,4 +83,18 @@ public class Preferences {
                 .putBoolean(ALWAYS_TRACKED, enabled)
                 .apply();
     }
+
+    public static int numberOfSaves(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getInt(NUMSAVS, 25);
+    }
+
+    public static void setnumberOfSaves(Context context, int number) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putInt(NUMSAVS, number)
+                .apply();
+    }
+
+
 }

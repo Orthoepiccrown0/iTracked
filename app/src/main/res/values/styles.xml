@@ -47,4 +47,22 @@
 
     </style>
 
+    <style name="Username_error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/red_warning</item>
+        <item name="android:colorControlActivated">@color/red_warning</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Username_okay_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/confirmcolor</item>
+        <item name="android:colorControlActivated">@color/confirmcolor</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Username_checking_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

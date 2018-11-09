@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">iTracked</string>
     <string name="title_activity_maps">Карта</string>
     <string name="search_hint">Поиск</string>
     <string name="username_hint">Логин</string>
@@ -20,7 +19,7 @@
     <string name="action_settings">Настройки</string>
     <string name="profile_new_username_hint">Логин</string>
     <string name="profile_interval_hint">Интервал обновления (в мин)</string>
-    <string name="profile_new_username_hint_user_exist">Пользователь уже существует</string>
+    <string name="profile_new_username_hint_user_exist">Имя пользователя недоступно</string>
     <string name="profile_new_username_hint_user_available">Логин доступен</string>
     <string name="profile_startup_text">Всегда отслеживать</string>
     <string name="home_search_no_internet_connection">Проверьте подключение к интернету</string>
@@ -34,12 +33,38 @@
     <string name="family_members_count">Кол-во участников</string>
     <string name="family_hint">Группа</string>
     <string name="profile_details">iTracked использует ваше местоположение чтобы отправить его через интернет и дать возможность вашим друзьям найти вас в любой момент! Вы можете выключить свою геолокацию но некоторые возможности станут недоступными</string>
-    <string name="nav_profile">Профиль</string>
-    <string name="nav_family">Группы</string>
     <string name="nav_home">Главная</string>
     <string name="register_error_warning">Внимание</string>
     <string name="register_error_space_username">Вы не можете использовать пробелы в своем никнейме</string>
     <string name="login_error_put_username">Введите свой никнейм</string>
     <string name="login_error_put_password">Введите свой пароль</string>
     <string name="home_user_has_no_position">Пользователь еще не обновил свою позицию</string>
+    <string name="nav_settings">Настройки</string>
+    <string name="nav_favs">Избранные</string>
+    <string name="profile_interval_15">Каждые 15 минут</string>
+    <string name="profile_interval_25">Каждые 25 минут</string>
+    <string name="profile_interval_35">Каждые 35 минут</string>
+    <string name="profile_always_tracked_hint">Отправляет вашу позицию на сервер</string>
+    <string name="profile_number_users">Сколько пользователей хранить в истории?</string>
+    <string name="profile_current_number_users">Сейчас мы можем сохранить до</string>
+    <string name="profile_current_number_users_last">пользователей</string>
+    <string name="nav_history">История</string>
+    <string name="profile_delete_user">Удалить аккаунт</string>
+    <string name="profile_settings_username_hint">Вы можете выбирать имя пользователя, которое будет использоваться для того чтобы другие пользователи нашли вас с его помощью.</string>
+    <string name="profile_settings_username_rules">Вы можете использовать латинские символы и цифры. \\nМинимальная длина 5 символов.</string>
+    <string name="profile_new_username_hint_user_is_you">Вы сейчас используете это имя пользователя</string>
+    <string name="profile_new_username_hint_checking">Проверяем доступность...</string>
+    <string name="profile_settings_group_hint">Вы можете выбрать имя группы, для того чтобы обьединяться с другими в группы и для простоты поиска</string>
+    <string name="profile_settings_group_members">Кол-во участников:</string>
+    <string name="favorites_hint_explain">Место только для избранных</string>
+    <string name="favorites_hint_error">Что-то пошло не такб мы работаем на этим</string>
+    <string name="favorites_snackbar_deleted_message">удалён</string>
+    <string name="favorites_snackbar_deleted_undo">Отмена</string>
+    <string name="history_hint_message">Здесь вы можете просматривать историю поиска</string>
+    <string name="history_menu_delete_history">Очистить историю</string>
+    <string name="favorites_menu_delete_favs">Очистить список</string>
+    <string name="profile_delete_confirm_title">Внимание</string>
+    <string name="profile_delete_confirm_message">Вы уверены что хотите удалить свой аккаунт? Это действие невозможно отменить.</string>
+    <string name="profile_delete_confirm_yes">OK</string>
+    <string name="profile_delete_confirm_no">Отмена</string>
 </resources>

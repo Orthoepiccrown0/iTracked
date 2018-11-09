@@ -23,8 +23,40 @@ public class RESTfulHelper {
     private static final String DOWNLOAD_PATH = "search/";
     private static final String CHANGE_USERNAME_PATH = "change_username/";
     private static final String CHANGE_FAMILY_PATH = "change_family/";
+    private static final String SEARCH_FAVS_PATH = "search_list/";
+    private static final String DELETE_USER_PATH = "delete_user/";
 
     private Uri ENDPOINT;
+
+    public String deleteUser(String username){
+        ENDPOINT = Uri.parse(FIRTS_PART_URL + DELETE_USER_PATH)
+                .buildUpon()
+                .appendQueryParameter("username", username)
+                .build();
+
+        try {
+            return getUrlString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String searchByJSONList(String JSONlist){
+        ENDPOINT = Uri.parse(FIRTS_PART_URL + SEARCH_FAVS_PATH)
+                .buildUpon()
+                .appendQueryParameter("list", JSONlist)
+                .build();
+
+        try {
+            return getUrlString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     public String sendInfo(Location location, Context context) {
 

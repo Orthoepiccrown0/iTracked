@@ -8,6 +8,15 @@ public class UserInfo implements Serializable {
     private String username;
     private String lastupdate;
     private String family;
+    private boolean isFav;
+
+    public boolean isFav() {
+        return isFav;
+    }
+
+    public void setFav(boolean fav) {
+        isFav = fav;
+    }
 
     public String getUsername() {
         return username;
