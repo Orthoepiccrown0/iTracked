@@ -11,6 +11,19 @@ public class Preferences {
     private final static String FAMILY_KEY = "family_key";
     private final static String ALWAYS_TRACKED = "tracktion";
     private final static String NUMSAVS = "123656598985456";
+    private final static String LAST_SCREEN = "lastscreen";
+
+    public static String getLastScreenID(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(LAST_SCREEN, null);
+    }
+
+    public static void setLastScreenID(Context context, String idCode) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(LAST_SCREEN, idCode)
+                .apply();
+    }
 
     public static long getTrackingInterval(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)

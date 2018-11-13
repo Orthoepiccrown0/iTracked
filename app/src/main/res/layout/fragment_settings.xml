@@ -17,7 +17,7 @@
             android:id="@+id/profile_username_tab"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             app:cardElevation="4dp">
 
             <android.support.constraint.ConstraintLayout
@@ -65,7 +65,7 @@
             android:id="@+id/profile_group_tab"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             app:cardElevation="4dp">
 
             <android.support.constraint.ConstraintLayout
@@ -113,7 +113,7 @@
             android:id="@+id/profile_interval_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             app:cardElevation="4dp">
 
             <android.support.constraint.ConstraintLayout
@@ -174,7 +174,7 @@
             android:id="@+id/profile_tracking_switch_tab"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             app:cardElevation="4dp">
 
             <android.support.constraint.ConstraintLayout
@@ -232,9 +232,10 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+            android:id="@+id/profile_history_max_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             app:cardElevation="4dp">
 
             <android.support.constraint.ConstraintLayout
@@ -306,7 +307,7 @@
             android:id="@+id/profile_delete_account_tab"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             app:cardElevation="4dp">
 
             <android.support.constraint.ConstraintLayout

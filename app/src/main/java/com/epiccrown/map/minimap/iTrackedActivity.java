@@ -57,9 +57,45 @@ public class iTrackedActivity extends AppCompatActivity
         isLogged();
         setContentView(R.layout.activity_i_tracked);
         setUpDefaultMethods();
-        home = new Home();
-        showPrimaryFragment(home);
+        setLastScreen();
         startTracking();
+    }
+
+    private void setLastScreen() {
+        if (Preferences.getLastScreenID(this) != null) {
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            switch (Preferences.getLastScreenID(this)) {
+                case "0xSettings":
+                    settings = new SettingsProfile();
+                    showPrimaryFragment(settings);
+                    navigationView.setCheckedItem(R.id.menu_settings);
+                    break;
+                case "0xFavs":
+                    favs = new Favorites();
+                    showPrimaryFragment(favs);
+                    navigationView.setCheckedItem(R.id.menu_favs);
+                    break;
+                case "0xHistory":
+                    history = new History();
+                    showPrimaryFragment(history);
+                    navigationView.setCheckedItem(R.id.menu_history);
+                    break;
+                case "0xHome":
+                    home = new Home();
+                    showPrimaryFragment(home);
+                    navigationView.setCheckedItem(R.id.menu_home);
+                    break;
+                default:
+                    home = new Home();
+                    showPrimaryFragment(home);
+                    navigationView.setCheckedItem(R.id.menu_home);
+                    break;
+
+            }
+        } else {
+            home = new Home();
+            showPrimaryFragment(home);
+        }
     }
 
     private void startTracking() {
@@ -209,22 +245,26 @@ public class iTrackedActivity extends AppCompatActivity
                 settings = new SettingsProfile();
             fragmentToSet = settings;
             hideKeyboard();
+            Preferences.setLastScreenID(this, "0xSettings");
         } else if (id == R.id.menu_favs) {
             if (favs == null)
                 favs = new Favorites();
             fragmentToSet = favs;
             hideKeyboard();
+            Preferences.setLastScreenID(this, "0xFavs");
         } else if (id == R.id.menu_logout) {
             UsefulStaticMethods.deleteUserAndQuit(this);
         } else if (id == R.id.menu_home) {
-            if(home==null)
+            if (home == null)
                 home = new Home();
             fragmentToSet = home;
             hideKeyboard();
-        } else if (id == R.id.menu_history){
-            if(history==null)
+            Preferences.setLastScreenID(this, "0xHome");
+        } else if (id == R.id.menu_history) {
+            if (history == null)
                 history = new History();
             fragmentToSet = history;
+            Preferences.setLastScreenID(this, "0xHistory");
             hideKeyboard();
         }
         closeDrawer();
@@ -257,7 +297,6 @@ public class iTrackedActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawers();
     }
-
 
 
     private void isLogged() {

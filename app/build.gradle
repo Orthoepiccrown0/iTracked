@@ -8,8 +8,8 @@ android {
         applicationId "com.epiccrown.map.minimap"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 4
-        versionName "Aristaeus"
+        versionCode 5
+        versionName "Athena"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
