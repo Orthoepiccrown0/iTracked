@@ -36,6 +36,7 @@ public class TrackerJob extends JobService {
         return true;
     }
 
+
     private void cancelJob() {
         JobScheduler scheduler = (JobScheduler) this.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         for (JobInfo jobInfo : scheduler.getAllPendingJobs())
